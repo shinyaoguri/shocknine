@@ -2,6 +2,9 @@ var CACHE_NAME  = "fb-cache-v8-10";
 
 var urlsToCache = [
     "index.html",
+    "images/favicon.png",
+    "images/icons/icon_192.png",
+    "images/icons/icon_1200.png",
     "https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js",
     "https://unpkg.com/onsenui/js/onsenui.min.js",
     "https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js",
@@ -11,7 +14,6 @@ var urlsToCache = [
 ];
 
 // 残したいキャッシュのバージョンをこの配列に入れる
-// 基本的に現行の1つだけでよい。他は削除される。
 const CACHE_KEYS = [
     CACHE_NAME
 ];
@@ -27,7 +29,7 @@ self.addEventListener('install', function(event) {
     );
 });
 
-//新しいバージョンのServiceWorkerが有効化されたとき
+// 新しいバージョンのServiceWorkerが有効化されたとき
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys().then(keys => {
