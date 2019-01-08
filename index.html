@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="versatile event guide app made by pwa">
+    <meta name="author" content="shinya oguri">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>shocknine</title>
+
+    <!-- for pwa -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+
+    <!-- JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
+
+    <!-- mobile Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Omnia-Min">
+
+    <!-- ios Icon Image-->
+    <!-- iPhone+ (6+,6S+,7+,8+,X) -->
+    <link rel="apple-touch-icon" href="images/icons/app-icon-72x72.png" sizes="180x180">
+    <!-- iPhone (4,4S,5,5C,5S,6,6SE,6S,7,8) -->
+    <link rel="apple-touch-icon" href="images/icons/app-icon-72x72.png" sizes="120x120">
+    <!-- Old iPhones (1st,2nd,3rd gen) -->
+    <link rel="apple-touch-icon" href="images/icons/app-icon-72x72.png" sizes="57x57">
+    <!-- iPad Pro -->
+    <link rel="apple-touch-icon" href="images/icons/app-icon-72x72.png" sizes="167x167">
+    <!-- Retina iPads (Mini2&3,Air,3&4 ) -->
+    <link rel="apple-touch-icon" href="images/icons/app-icon-72x72.png" sizes="152x152">
+    <!-- Old iPads (1,2,Mini1) -->
+    <link rel="apple-touch-icon" href="images/icons/app-icon-72x72.png" sizes="76x76">
+
+    <!-- ios Splash Image-->
+    <!-- iPad -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPad-1536x2048@2x.png"
+          media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <!-- iPad Pro 10.5 -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPadPro10-1688x2224@2x.png"
+          media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <!-- iPad Pro 11 -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPadPro11-1668x2388@2x.png"
+          media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <!-- iPad Pro 12.9 -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPadPro12-2048x2732@2x.png"
+          media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <!-- iPhone 5, SE -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPhone5SE-640x1136@2x.png"
+          media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <!-- iPhone 6, 7, 8 -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPhone678-750x1334@2x.png"
+          media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <!-- iPhone 6, 7, 8 Plus -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPhone678Plus-828x1472@3x.png"
+          media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <!-- iPhone X -->
+    <link rel="apple-touch-startup-image"
+          href="images/splash/iPhoneX-750x1624@3x.png"
+          media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <!-- iPhone Xr -->
+    <!-- iPhone Xs -->
+    <!-- iPhone Xs Max -->
+</head>
+
+<body style="position:fixed;">
+
+<!-- navigator -->
+<template id="main">
+    <v-ons-navigator :page-stack="pageStack"></v-ons-navigator>
+</template>
+
+<!-- tabbar -->
+<template id="tabbar">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="center">{{ title }}</div>
+        </v-ons-toolbar>
+
+        <v-ons-tabbar swipeable
+                      :tabs="tabs"
+                      :visible="true"
+                      :index.sync="activeIndex"
+        >
+        </v-ons-tabbar>
+    </v-ons-page>
+</template>
+
+<!-- tab 1/4 -->
+<template id="tab_home">
+    <v-ons-page>
+    </v-ons-page>
+</template>
+
+<!-- tab 2/4 -->
+<template id="tab_calendar">
+    <v-ons-page>
+    </v-ons-page>
+</template>
+
+<!-- tab 3/4 -->
+<template id="tab_search">
+    <v-ons-page>
+    </v-ons-page>
+</template>
+
+<!-- tab 4/4 -->
+<template id="tab_settings">
+    <v-ons-page>
+    </v-ons-page>
+</template>
+
+<!-- app -->
+<div id="app"></div>
+
+<script>
+////////////////
+// Service Worker
+////////////////
+window.addEventListener('load', function() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("sw.js")
+            .then(function(registration) {
+                console.log("serviceWorker registed.");
+            }).catch(function(error) {
+            console.warn("serviceWorker error.", error);
+        });
+    }
+});
+
+////////////////
+// Vuex
+////////////////
+const store = new Vuex.Store({
+    modules: {
+        navigator: {
+            strict: true,
+            namespaced: true,
+            state: {
+                stack: [],
+                options: {}
+            },
+            mutations: {
+                push (state, page) {
+                    state.stack.push(page)
+                },
+                pop (state) {
+                    if (state.stack.length() > 1) {
+                        state.stack.pop()
+                    }
+                },
+                replace (state, page) {
+                    state.stack.pop()
+                    state.stack.push(page)
+                },
+                reset (state, page) {
+                    state.stack = [page || state.stack[0]]
+                },
+                options (state, newOptions = {}) {
+                    state.options = newOptions
+                }
+            }
+        },
+        splitter: {
+            strict: true,
+            namespaced: true,
+            state: {
+                open: false
+            },
+            mutations: {
+                toggle(state, shouldOpen) {
+                    if (typeof shouldOpen === 'boolean') {
+                        state.open = shouldOpen
+                    } else {
+                        state.open = !state.open
+                    }
+                }
+            }
+        },
+        tabbar: {
+            strict: true,
+            namespaced: true,
+            state: {
+
+            },
+            mutations: {
+
+            }
+        }
+    }
+});
+
+////////////////
+// tabs
+////////////////
+const tabHome = {
+    template: '#tab_home',
+};
+const tabCalendar = {
+    template: '#tab_calendar',
+};
+const tabSearch = {
+    key: 'search',
+    template: '#tab_search',
+};
+
+const tabSettings = {
+    template: '#tab_settings',
+};
+const appTabbar = {
+    template: '#tabbar',
+    data: function () {
+        return {
+            activeIndex: 0,
+            tabs: [
+                {
+                    icon: 'fa-cutlery',
+                    label: '今日の献立',
+                    page: tabHome
+                },
+                {
+                    icon: 'fa-table',
+                    label: '献立表',
+                    page: tabCalendar
+                },
+                {
+                    icon: 'fa-search',
+                    label: '検索',
+                    page: tabSearch,
+                    badge: 7
+                },
+                {
+                    icon: 'fa-sliders',
+                    label: '設定',
+                    page: tabSettings
+                }
+            ]
+        }
+    },
+    methods: {
+    },
+    computed: {
+        title: function () {
+            return this.tabs[this.activeIndex].label
+        }
+    }
+};
+
+////////////////
+// main
+////////////////
+new Vue({
+    el: '#app',
+    template: '#main',
+    store: store,
+    data: function() {
+        return {
+            activeIndex: 0,
+        }
+    },
+    beforeCreate () {
+        store.commit('navigator/push', appTabbar)
+    },
+    methods: {
+        storePop: function () {
+            this.$store.commit('navigator/pop')
+        }
+    },
+    computed: {
+        pageStack: function () {
+            return this.$store.state.navigator.stack
+        },
+        options: function () {
+            return this.$store.state.navigator.options
+        }
+    }
+});
+</script>
+</body>
+</html>
