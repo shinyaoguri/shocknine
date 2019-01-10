@@ -1,16 +1,16 @@
 var CACHE_NAME  = "fb-cache-v8-10";
 
 var urlsToCache = [
-    "index.html",
+    "/",
     "images/favicon.png",
     "images/icons/icon_192.png",
     "images/icons/icon_1200.png",
     "https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js",
-    "https://unpkg.com/onsenui/js/onsenui.min.js",
+    "https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js",
     "https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js",
     "https://unpkg.com/vuex@3.0.1/dist/vuex.js",
-    "https://unpkg.com/onsenui/css/onsenui.css",
-    "https://unpkg.com/onsenui/css/onsen-css-components.min.css"
+    "https://unpkg.com/onsenui@2.10.6/css/onsenui.css",
+    "https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css"
 ];
 
 // 残したいキャッシュのバージョンをこの配列に入れる
@@ -18,7 +18,8 @@ const CACHE_KEYS = [
     CACHE_NAME
 ];
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', event => {
+    console.log('Service Worker Installing');
     event.waitUntil(
         caches.open(CACHE_NAME) // 上記で指定しているキャッシュ名
             .then(
@@ -31,6 +32,7 @@ self.addEventListener('install', function(event) {
 
 // 新しいバージョンのServiceWorkerが有効化されたとき
 self.addEventListener('activate', event => {
+    console.log('Service Worker Activating');
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(
@@ -45,7 +47,7 @@ self.addEventListener('activate', event => {
     );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', event => {
     var online = navigator.onLine;
 
     // ファイルパス ~/test.htmlにアクセスすると、このファイル自体は無いがServiceWorkerがResponseを作成して表示してくれる
