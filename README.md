@@ -14,38 +14,86 @@ https://help.github.com/articles/what-is-github-pages/
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-## Mics
-今日の献立
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyonokondate.html
+本アプリケーションは以下のソフトウェア，およびデータを使用しています．
 
-献立表(PDF)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kondate.html
+### Vue
 
-献立表(CSV)
-http://linkdata.org/work/rdf1s4907i
+Copyright (c) 2013-present, Yuxi (Evan) You
 
-アレルギー対象食品使用献立一覧表(PDF)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/allergytaio.html
+[vuejs/vue](https://github.com/vuejs/vue) is licensed under the [MIT License](https://github.com/vuejs/vue/blob/dev/LICENSE)
 
-放射線測定結果(PDF)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html
+### Vuex
 
-給食だより(PDF)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokudayori.html
+Copyright (c) 2015-present Evan You
 
-給食費(Web)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokuhi.html
+[vuejs/vuex](https://github.com/vuejs/vuex) is licensed under the [MIT License](https://github.com/vuejs/vuex/blob/dev/LICENSE)
 
-台風等における学校給食の取扱いについて(PDF)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/taifu.html
+### [OnsenUI](https://github.com/OnsenUI/OnsenUI)
 
-給食物資の産地(PDF)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushoku.html
+Copyright 2013-2018 ASIAL CORPORATION
 
-学校給食レシピ(PDF)
-http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyuusyokuresipi1.html
+[OnsenUI/OnsenUI](https://github.com/OnsenUI/OnsenUI) is licensed under the [Apache License 2.0](https://github.com/OnsenUI/OnsenUI/blob/master/LICENSE)
 
-## 制作メモ
-全ての献立CSVリストのJSON
-http://linkdata.org/api/1/rdf1s4907i/datapackage.json
+### 愛知県半田市のオープンデータ
 
+#### 半田市学校給食メニュー
+
+Copyright (c) 2017- [愛知県半田市企画課広報情報担当](http://user.linkdata.org/user/kouhou_handacity/work)
+
+[半田市学校給食メニュー](http://linkdata.org/work/rdf1s4907i) is licensed under the [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/deed.ja)
+
+
+### 愛知県半田市の公開しているデータ
+#### 今日の献立
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[今日の献立](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyonokondate.html)
+
+#### 献立表
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[献立表](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kondate.html)
+
+#### 食物アレルギーのある児童生徒への対応について
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[食物アレルギーのある児童生徒への対応について](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/allergytaio.html)
+
+#### 放射線測定結果
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[放射線測定結果](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html)
+
+#### 給食だより
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[給食だより](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokudayori.html)
+
+#### 学校給食費について
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[学校給食費について](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokuhi.html)
+
+#### 台風等における学校給食の取扱いについて
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[台風等における学校給食の取扱いについて](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/taifu.html)
+
+#### 給食物資の産地
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[給食物資の産地](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushoku.html)
+
+#### 学校給食レシピ
+
+Copyright (c) Handa City. All Rights Reserved.
+
+[学校給食レシピ](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyuusyokuresipi1.html)
