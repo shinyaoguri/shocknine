@@ -17,7 +17,7 @@
     <!-- favicon -->
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icon-android/icon-192-192.png">
 
     <!-- CSS -->
     <link rel="stylesheet" href="//unpkg.com/onsenui@2.10.6/css/onsenui.css">
@@ -54,6 +54,93 @@
 <!-- navigator -->
 <template id="main">
     <v-ons-navigator :page-stack="pageStack"></v-ons-navigator>
+</template>
+
+<!-- splitter -->
+<template id="splitter">
+    <v-ons-splitter>
+        <v-ons-splitter-side swipeable
+                             width="150px"
+                             collapse=""
+                             side="left"
+                             :open.sync="menuIsOpen"
+        >
+            <v-ons-page>
+                <v-ons-list>
+                    <v-ons-list-item v-for="page in pages" :key="page.title"
+                                     tappable
+                                     modifier="chevron"
+                                     @click="loadPage(page.page)"
+                    >
+                        <div class="left">
+                            <v-ons-icon :icon="page.icon"></v-ons-icon>
+                        </div>
+                        <div class="center">{{ page.title }}</div>
+                    </v-ons-list-item>
+                </v-ons-list>
+            </v-ons-page>
+
+        </v-ons-splitter-side>
+
+        <v-ons-splitter-content>
+            <home-page></home-page>
+        </v-ons-splitter-content>
+    </v-ons-splitter>
+</template>
+
+<!-- main page 1/3 -->
+<template id="home">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left">
+                <v-ons-toolbar-button @click="toggleMenu">
+                    <v-ons-icon icon="fa-bars"></v-ons-icon>
+                </v-ons-toolbar-button>
+            </div>
+            <div class="center">今日の献立</div>
+        </v-ons-toolbar>
+
+        <div class="menu-image">
+            <img class="todays-image" :src="imageSrc" onerror="this.src='http://hoge.main.jp/handa-lunch-od/noimg.png'">
+            <p>{{ todayStr }}</p>
+        </div>
+        <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
+            <v-ons-list-header>
+                {{item.type}}
+            </v-ons-list-header>
+            <v-ons-list-item>
+                {{item.name}}
+            </v-ons-list-item>
+
+        </v-ons-list>
+    </v-ons-page>
+</template>
+
+<!-- main page 2/3 -->
+<template id="news">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="center">news</div>
+            <div class="right"><v-ons-icon icon="fa-times" @click="$store.commit('navigator/pop')"></v-ons-icon></div>
+        </v-ons-toolbar>
+
+        <p style="text-align: center">
+            Some news here.
+        </p>
+    </v-ons-page>
+</template>
+
+<!-- side menu 3/3 -->
+<template id="settings">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="center">setting</div>
+            <div class="right"><v-ons-icon icon="fa-times" @click=""></v-ons-icon></div>
+        </v-ons-toolbar>
+        <p style="text-align: center">
+            Change the settings.
+        </p>
+    </v-ons-page>
 </template>
 
 <!-- tabbar -->
@@ -226,14 +313,14 @@
                 strict: true,
                 namespaced: true,
                 state: {
-                    open: false
+                    isOpen: false
                 },
                 mutations: {
                     toggle(state, shouldOpen) {
                         if (typeof shouldOpen === 'boolean') {
-                            state.open = shouldOpen
+                            state.isOpen = shouldOpen
                         } else {
-                            state.open = !state.open
+                            state.isOpen = !state.isOpen
                         }
                     }
                 }
@@ -413,7 +500,6 @@
             }
         }
     };
-
     const tabSettings = {
         template: '#tab_settings',
     };
@@ -463,17 +549,159 @@
     };
 
     ////////////////
+    // splitter
+    ////////////////
+
+    const homePage = {
+        template: '#home',
+        data: function () {
+            return {
+                pullhookstate: 'initial',
+                ratio: 0,
+                now: null,
+                imageSrc: this.getTodayMenuImgPath(),
+                dayPath: this.getTodayMenuImgPath(),
+                todayStr: this.getTodayStr(),
+                todaysMenu: {
+                    id: 20180611,
+                    data: {
+                        year: 2018,
+                        month: 6,
+                        date: 11,
+                        day: 1,
+                        menuExist: true,
+                        cal_s: 668,
+                        cal_c: 847,
+                        menu: [
+                            {
+                                type: 'main',
+                                name: 'ごはん'
+                            },
+                            {
+                                type: 'sub',
+                                name: '★はるまき'
+                            },
+                            {
+                                type: 'sub',
+                                name: 'ぶたキムチいため'
+                            },
+                            {
+                                type: 'sub',
+                                name: 'ちゅうかふうたまごスープ'
+                            },
+                            {
+                                type: 'drink',
+                                name: '牛乳'
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        created: function () {
+            this.now = new Date()
+            setInterval(() => {
+                // this.now = new Date()
+                // console.log('hoge')
+            }, 100)
+        },
+        computed: {
+            today: function () {
+                return this.now.getSeconds()
+            }
+        },
+        methods: {
+            onPull(ratio) {
+                this.ratio = ratio
+            },
+            onAction(done) {
+                setTimeout(() => {
+                    this.imageSrc = this.getTodayMenuImgPath()
+                    done()
+                }, 1500)
+            },
+            getTodayMenuImgPath: function () {
+                let day = new Date()
+                let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
+                return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
+            },
+            getTodayStr: function () {
+                let day = new Date()
+                let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
+                return today
+            },
+            toggleMenu: function () {
+                this.$store.commit('splitter/toggle')
+            }
+        }
+    };
+
+    const newsPage = {
+        template: '#news',
+        methods: {
+            toggleMenu: function () {
+                this.$store.commit('splitter/toggle')
+            }
+        }
+    };
+
+    const settingsPage = {
+        template: '#settings',
+        methods: {
+            toggleMenu: function () {
+                this.$store.commit('splitter/toggle')
+            }
+        }
+    };
+
+    const appSplitter = {
+        template: "#splitter",
+        data() {
+            return {
+                pages: [
+                    {
+                        title: 'news',
+                        icon: 'fa-home',
+                        page: newsPage
+                    },
+                    {
+                        title: "settings",
+                        icon: 'fa-home',
+                        page: settingsPage
+                    }
+                ]
+            };
+        },
+        methods: {
+            loadPage: function (newPage) {
+                this.$store.commit('navigator/push', newPage)
+            }
+        },
+        computed: {
+            menuIsOpen: {
+                get: function () {
+                    return this.$store.state.splitter.isOpen
+                },
+                set: function (newValue) {
+                    this.$store.commit('splitter/toggle', newValue)
+                }
+            }
+        },
+        components: {
+            homePage: homePage
+        }
+    };
+
+
+    ////////////////
     // main
     ////////////////
     new Vue({
         el: '#app',
         template: '#main',
         store: store,
-        data: function () {
-            return {}
-        },
         beforeCreate() {
-            store.commit('navigator/push', appTabbar)
+            store.commit('navigator/push', appSplitter)
         },
         methods: {
             storePop: function () {
@@ -490,21 +718,8 @@
         }
     });
 
-    document.documentElement.setAttribute('onsflag-iphonex-landscape', '');
-
-    function isiPadX() {
-        return ons.platform.isIpad() &&
-            (
-                window.screen.width === 375 && window.screen.height === 812 ||
-                window.screen.width === 812 && window.screen.height === 375 ||
-                window.screen.width === 414 && window.screen.height === 896 ||
-                window.screen.width === 896 && window.screen.height === 414
-            )
-    }
-
-    // iPhone X,XS,XS Max であるか否かを判定
-    // <html> 要素に属性を追加（値として空文字列を設定）
-    if (ons.platform.isIPhoneX() || this.isIpadX()) {
+    //TODO:iPhoneX,XS,MS Max, iPad 2018-への対応
+    if (ons.platform.isIPhoneX()) {
         document.documentElement.setAttribute('onsflag-iphonex-landscape', '');
     }
 </script>

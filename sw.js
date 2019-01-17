@@ -2,9 +2,6 @@ var CACHE_NAME  = "shocknine-cache-v0-01";
 
 var urlsToCache = [
     "/",
-    "images/favicon.png",
-    "images/icons/icon_192.png",
-    "images/icons/icon_1200.png",
     "https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js",
     "https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js",
     "https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js",
