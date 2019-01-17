@@ -17,7 +17,7 @@
     <!-- favicon -->
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/android-icon-192x192.png">
 
     <!-- CSS -->
     <link rel="stylesheet" href="//unpkg.com/onsenui@2.10.6/css/onsenui.css">
@@ -30,7 +30,8 @@
     <script type="text/javascript" src="//unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
 
     <!-- mobile  -->
-    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <meta name="viewport"
+          content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 
     <!-- mobile Safari -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -162,7 +163,8 @@
                     <img class="list-item__thumbnail" src="http://placekitten.com/g/40/40">
                 </div>
                 <div class="center">
-                    <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
+                    <span class="list-item__title">Cutest kitty</span><span
+                        class="list-item__subtitle">On the Internet</span>
                 </div>
             </v-ons-list-item>
         </v-ons-list>
@@ -173,330 +175,345 @@
 <div id="app"></div>
 
 <script>
-////////////////
-// Service Worker
-////////////////
-window.addEventListener('load', function() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("sw.js")
-            .then(function(registration) {
-                console.log("serviceWorker registed.");
-            }).catch(function(error) {
-            console.warn("serviceWorker error.", error);
-        });
-    }
-});
-
-////////////////
-// Vuex
-////////////////
-const store = new Vuex.Store({
-    modules: {
-        navigator: {
-            strict: true,
-            namespaced: true,
-            state: {
-                stack: [],
-                options: {}
-            },
-            mutations: {
-                push (state, page) {
-                    state.stack.push(page)
-                },
-                pop (state) {
-                    if (state.stack.length() > 1) {
-                        state.stack.pop()
-                    }
-                },
-                replace (state, page) {
-                    state.stack.pop()
-                    state.stack.push(page)
-                },
-                reset (state, page) {
-                    state.stack = [page || state.stack[0]]
-                },
-                options (state, newOptions = {}) {
-                    state.options = newOptions
-                }
-            }
-        },
-        splitter: {
-            strict: true,
-            namespaced: true,
-            state: {
-                open: false
-            },
-            mutations: {
-                toggle(state, shouldOpen) {
-                    if (typeof shouldOpen === 'boolean') {
-                        state.open = shouldOpen
-                    } else {
-                        state.open = !state.open
-                    }
-                }
-            }
-        },
-        tabbar: {
-            strict: true,
-            namespaced: true,
-            state: {
-                activeIndex: 0
-            },
-            mutations: {
-                set (state, index) {
-                    state.activeIndex = index
-                }
-            }
+    ////////////////
+    // Service Worker
+    ////////////////
+    window.addEventListener('load', function () {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("sw.js")
+                .then(function (registration) {
+                    console.log("serviceWorker registed.");
+                }).catch(function (error) {
+                console.warn("serviceWorker error.", error);
+            });
         }
-    }
-});
+    });
 
-////////////////
-// tabs
-////////////////
-const tabHome = {
-    template: '#tab_home',
-    data: function () {
-        return {
-            pullhookstate: 'initial',
-            ratio: 0,
-            now: null,
-            imageSrc: this.getTodayMenuImgPath(),
-            dayPath: this.getTodayMenuImgPath(),
-            todayStr: this.getTodayStr(),
-            todaysMenu: {
-                id: 20180611,
-                data: {
-                    year: 2018,
-                    month: 6,
-                    date: 11,
-                    day: 1,
-                    menuExist: true,
-                    cal_s: 668,
-                    cal_c: 847,
-                    menu: [
-                        {
-                            type: 'main',
-                            name: 'ごはん'
-                        },
-                        {
-                            type: 'sub',
-                            name: '★はるまき'
-                        },
-                        {
-                            type: 'sub',
-                            name: 'ぶたキムチいため'
-                        },
-                        {
-                            type: 'sub',
-                            name: 'ちゅうかふうたまごスープ'
-                        },
-                        {
-                            type: 'drink',
-                            name: '牛乳'
+    ////////////////
+    // Vuex
+    ////////////////
+    const store = new Vuex.Store({
+        modules: {
+            navigator: {
+                strict: true,
+                namespaced: true,
+                state: {
+                    stack: [],
+                    options: {}
+                },
+                mutations: {
+                    push(state, page) {
+                        state.stack.push(page)
+                    },
+                    pop(state) {
+                        if (state.stack.length() > 1) {
+                            state.stack.pop()
                         }
-                    ]
-                }
-            }
-        }
-    },
-    created: function () {
-        this.now = new Date()
-        setInterval(() => {
-            // this.now = new Date()
-            // console.log('hoge')
-        }, 100)
-    },
-    computed: {
-        today: function () {
-            return this.now.getSeconds()
-        }
-    },
-    methods: {
-        onPull (ratio) {
-            this.ratio = ratio
-        },
-        onAction (done) {
-            setTimeout(() => {
-                this.imageSrc = this.getTodayMenuImgPath()
-                done()
-            }, 1500)
-        },
-        getTodayMenuImgPath: function () {
-            let day = new Date()
-            let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
-            return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
-        },
-        getTodayStr: function () {
-            let day = new Date()
-            let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
-            return today
-        }
-    }
-};
-const tabCalendar = {
-    template: '#tab_calendar',
-};
-const tabSearch = {
-    template: '#tab_search',
-    data: function () {
-        return {
-            weeks: ['日', '月', '火', '水', '木', '金', '土'],
-            calData: {year: 0, month: 0}
-        }
-    },
-    created: function () {
-        var date = new Date()
-        this.calData.year = date.getFullYear()
-        this.calData.month = date.getMonth() + 1
-    },
-    methods: {
-        getMonthName: function (month) {
-            let monthName = ['January','February','March','April','May','June','July','August','September','October','November','December']
-            return monthName[month - 1]
-        },
-        getMonthJapaneseName: function (month) {
-            let monthName = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
-            return monthName[month - 1]
-        },
-        moveLastMonth: function () {
-            if (this.calData.month === 1) {
-                this.calData.year--
-                this.calData.month = 12
-            }
-            else {
-                this.calData.month--
-            }
-        },
-        moveNextMonth: function () {
-            if (this.calData.month === 12) {
-                this.calData.year++
-                this.calData.month = 1
-            }
-            else {
-                this.calData.month++
-            }
-        }
-    },
-    computed: {
-        calendar: function () {
-            // 1日の曜日
-            let firstDay = new Date(this.calData.year, this.calData.month - 1, 1).getDay()
-            // 晦日の日にち
-            let lastDate = new Date(this.calData.year, this.calData.month, 0).getDate()
-            // 日にちのカウント
-            let dayIdx = 1
-            let calendar = []
-            for (let w = 0; w < 6; w++) {
-                let week = []
-                // 空白行をなくすため
-                if (lastDate < dayIdx) {
-                    break
-                }
-                for (let d = 0; d < 7; d++) {
-                    if (w === 0 && d < firstDay) {
-                        week[d] = {day: ''}
-                    } else if (w === 6 && lastDate < dayIdx) {
-                        week[d] = {day: ''}
-                        dayIdx++
-                    } else if (lastDate < dayIdx) {
-                        week[d] = {day: ''}
-                        dayIdx++
-                    } else {
-                        week[d] = {day: dayIdx}
-                        dayIdx++
+                    },
+                    replace(state, page) {
+                        state.stack.pop()
+                        state.stack.push(page)
+                    },
+                    reset(state, page) {
+                        state.stack = [page || state.stack[0]]
+                    },
+                    options(state, newOptions = {}) {
+                        state.options = newOptions
                     }
                 }
-                calendar.push(week)
-            }
-            return calendar
-        }
-    }
-};
-
-const tabSettings = {
-    template: '#tab_settings',
-};
-const appTabbar = {
-    template: '#tabbar',
-    data: function () {
-        return {
-            tabs: [
-                {
-                    icon: 'fa-cutlery',
-                    label: '今日の献立',
-                    page: tabHome
-                },
-                {
-                    icon: 'fa-table',
-                    label: '今週の献立',
-                    page: tabCalendar
-                },
-                {
-                    icon: 'fa-search',
-                    label: '検索',
-                    page: tabSearch,
-                    badge: ''
-                },
-                {
-                    icon: 'fa-sliders',
-                    label: 'その他',
-                    page: tabSettings
-                }
-            ]
-        }
-    },
-    methods: {
-    },
-    computed: {
-        index: {
-            get () {
-                return store.state.tabbar.activeIndex
             },
-            set (newVal) {
-                store.commit('tabbar/set', newVal)
+            splitter: {
+                strict: true,
+                namespaced: true,
+                state: {
+                    open: false
+                },
+                mutations: {
+                    toggle(state, shouldOpen) {
+                        if (typeof shouldOpen === 'boolean') {
+                            state.open = shouldOpen
+                        } else {
+                            state.open = !state.open
+                        }
+                    }
+                }
+            },
+            tabbar: {
+                strict: true,
+                namespaced: true,
+                state: {
+                    activeIndex: 0
+                },
+                mutations: {
+                    set(state, index) {
+                        state.activeIndex = index
+                    }
+                }
+            }
+        }
+    });
+
+    ////////////////
+    // tabs
+    ////////////////
+    const tabHome = {
+        template: '#tab_home',
+        data: function () {
+            return {
+                pullhookstate: 'initial',
+                ratio: 0,
+                now: null,
+                imageSrc: this.getTodayMenuImgPath(),
+                dayPath: this.getTodayMenuImgPath(),
+                todayStr: this.getTodayStr(),
+                todaysMenu: {
+                    id: 20180611,
+                    data: {
+                        year: 2018,
+                        month: 6,
+                        date: 11,
+                        day: 1,
+                        menuExist: true,
+                        cal_s: 668,
+                        cal_c: 847,
+                        menu: [
+                            {
+                                type: 'main',
+                                name: 'ごはん'
+                            },
+                            {
+                                type: 'sub',
+                                name: '★はるまき'
+                            },
+                            {
+                                type: 'sub',
+                                name: 'ぶたキムチいため'
+                            },
+                            {
+                                type: 'sub',
+                                name: 'ちゅうかふうたまごスープ'
+                            },
+                            {
+                                type: 'drink',
+                                name: '牛乳'
+                            }
+                        ]
+                    }
+                }
             }
         },
-        title: function () {
-            return this.tabs[this.index].label
-        }
-    }
-};
-
-////////////////
-// main
-////////////////
-new Vue({
-    el: '#app',
-    template: '#main',
-    store: store,
-    data: function() {
-        return {
-        }
-    },
-    beforeCreate () {
-        store.commit('navigator/push', appTabbar)
-    },
-    methods: {
-        storePop: function () {
-            this.$store.commit('navigator/pop')
-        }
-    },
-    computed: {
-        pageStack: function () {
-            return this.$store.state.navigator.stack
+        created: function () {
+            this.now = new Date()
+            setInterval(() => {
+                // this.now = new Date()
+                // console.log('hoge')
+            }, 100)
         },
-        options: function () {
-            return this.$store.state.navigator.options
+        computed: {
+            today: function () {
+                return this.now.getSeconds()
+            }
+        },
+        methods: {
+            onPull(ratio) {
+                this.ratio = ratio
+            },
+            onAction(done) {
+                setTimeout(() => {
+                    this.imageSrc = this.getTodayMenuImgPath()
+                    done()
+                }, 1500)
+            },
+            getTodayMenuImgPath: function () {
+                let day = new Date()
+                let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
+                return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
+            },
+            getTodayStr: function () {
+                let day = new Date()
+                let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
+                return today
+            }
         }
+    };
+    const tabCalendar = {
+        template: '#tab_calendar',
+    };
+    const tabSearch = {
+        template: '#tab_search',
+        data: function () {
+            return {
+                weeks: ['日', '月', '火', '水', '木', '金', '土'],
+                calData: {year: 0, month: 0}
+            }
+        },
+        created: function () {
+            var date = new Date()
+            this.calData.year = date.getFullYear()
+            this.calData.month = date.getMonth() + 1
+        },
+        methods: {
+            getMonthName: function (month) {
+                let monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                return monthName[month - 1]
+            },
+            getMonthJapaneseName: function (month) {
+                let monthName = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                return monthName[month - 1]
+            },
+            moveLastMonth: function () {
+                if (this.calData.month === 1) {
+                    this.calData.year--
+                    this.calData.month = 12
+                } else {
+                    this.calData.month--
+                }
+            },
+            moveNextMonth: function () {
+                if (this.calData.month === 12) {
+                    this.calData.year++
+                    this.calData.month = 1
+                } else {
+                    this.calData.month++
+                }
+            }
+        },
+        computed: {
+            calendar: function () {
+                // 1日の曜日
+                let firstDay = new Date(this.calData.year, this.calData.month - 1, 1).getDay()
+                // 晦日の日にち
+                let lastDate = new Date(this.calData.year, this.calData.month, 0).getDate()
+                // 日にちのカウント
+                let dayIdx = 1
+                let calendar = []
+                for (let w = 0; w < 6; w++) {
+                    let week = []
+                    // 空白行をなくすため
+                    if (lastDate < dayIdx) {
+                        break
+                    }
+                    for (let d = 0; d < 7; d++) {
+                        if (w === 0 && d < firstDay) {
+                            week[d] = {day: ''}
+                        } else if (w === 6 && lastDate < dayIdx) {
+                            week[d] = {day: ''}
+                            dayIdx++
+                        } else if (lastDate < dayIdx) {
+                            week[d] = {day: ''}
+                            dayIdx++
+                        } else {
+                            week[d] = {day: dayIdx}
+                            dayIdx++
+                        }
+                    }
+                    calendar.push(week)
+                }
+                return calendar
+            }
+        }
+    };
+
+    const tabSettings = {
+        template: '#tab_settings',
+    };
+    const appTabbar = {
+        template: '#tabbar',
+        data: function () {
+            return {
+                tabs: [
+                    {
+                        icon: 'fa-cutlery',
+                        label: '今日の献立',
+                        page: tabHome
+                    },
+                    {
+                        icon: 'fa-table',
+                        label: '今週の献立',
+                        page: tabCalendar
+                    },
+                    {
+                        icon: 'fa-search',
+                        label: '検索',
+                        page: tabSearch,
+                        badge: ''
+                    },
+                    {
+                        icon: 'fa-sliders',
+                        label: 'その他',
+                        page: tabSettings
+                    }
+                ]
+            }
+        },
+        methods: {},
+        computed: {
+            index: {
+                get() {
+                    return store.state.tabbar.activeIndex
+                },
+                set(newVal) {
+                    store.commit('tabbar/set', newVal)
+                }
+            },
+            title: function () {
+                return this.tabs[this.index].label
+            }
+        }
+    };
+
+    ////////////////
+    // main
+    ////////////////
+    new Vue({
+        el: '#app',
+        template: '#main',
+        store: store,
+        data: function () {
+            return {}
+        },
+        beforeCreate() {
+            store.commit('navigator/push', appTabbar)
+        },
+        methods: {
+            storePop: function () {
+                this.$store.commit('navigator/pop')
+            }
+        },
+        computed: {
+            pageStack: function () {
+                return this.$store.state.navigator.stack
+            },
+            options: function () {
+                return this.$store.state.navigator.options
+            }
+        }
+    });
+
+    document.documentElement.setAttribute('onsflag-iphonex-landscape', '');
+
+    function isiPadX() {
+        return ons.platform.isIpad() &&
+            (
+                window.screen.width === 375 && window.screen.height === 812 ||
+                window.screen.width === 812 && window.screen.height === 375 ||
+                window.screen.width === 414 && window.screen.height === 896 ||
+                window.screen.width === 896 && window.screen.height === 414
+            )
     }
-});
+
+    // iPhone X,XS,XS Max であるか否かを判定
+    // <html> 要素に属性を追加（値として空文字列を設定）
+    if (ons.platform.isIPhoneX() || this.isIpadX()) {
+        document.documentElement.setAttribute('onsflag-iphonex-landscape', '');
+    }
 </script>
 
 <style scoped>
     .menu-image {
         position: relative;
     }
+
     .menu-image p {
         position: absolute;
         top: 0px;
@@ -509,6 +526,7 @@ new Vue({
         padding: 5px 15px;
         font-weight: bold;
     }
+
     .todays-image {
         width: 100%;
     }
@@ -525,7 +543,7 @@ new Vue({
         margin: 30px auto 0;
         border-radius: 100%;
         position: relative;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
         display: inline-block;
         line-height: 0px;
     }
@@ -563,19 +581,22 @@ new Vue({
     }
 
     /* カレンダーのスタイル */
-    .table th, td{
+    .table th, td {
         text-align: center;
     }
 
     #calendar th:first-child {
         background-color: #FEEEFF;
     }
+
     #calendar td:first-child {
         background-color: #FEEEFF;
     }
+
     #calendar th:nth-child(7) {
         background-color: #DFFFFF
     }
+
     #calendar td:nth-child(7) {
         background-color: #DFFFFF
     }
