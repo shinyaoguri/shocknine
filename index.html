@@ -19,7 +19,6 @@
     <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
 
-
     <!-- CSS -->
     <link rel="stylesheet" href="//unpkg.com/onsenui@2.10.6/css/onsenui.css">
     <link rel="stylesheet" href="//unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css">
@@ -131,9 +130,7 @@
             <div class="center">{{ title }}</div>
         </v-ons-toolbar>
 
-        <v-ons-tabbar swipeable
-                      position="bottom"
-                      :tabs="tabs"
+        <v-ons-tabbar :tabs="tabs"
                       :index.sync="index"
         >
         </v-ons-tabbar>
@@ -150,7 +147,6 @@
                 :on-pull="md && onPull || null"
                 @changestate="pullhookstate = $event.state"
         >
-
             <!-- Show this on iOS -->
             <v-ons-icon v-if="!md"
                         size="22px"
@@ -190,6 +186,17 @@
 <!-- tab 2/4 -->
 <template id="tab_calendar">
     <v-ons-page>
+    </v-ons-page>
+</template>
+
+<!-- tab 3/4 -->
+<template id="tab_search">
+    <v-ons-page>
+        <p style="text-align: center; margin-top: 10px;">
+            <ons-search-input
+                    placeholder="検索"
+            ></ons-search-input>
+        </p>
         <div id="calendar-nav">
             <button @click="moveLastMonth()">
                 <v-ons-icon icon="fa-angle-left"></v-ons-icon>
@@ -209,23 +216,24 @@
             </tr>
             </tbody>
         </table>
-    </v-ons-page>
-</template>
 
-<!-- tab 3/4 -->
-<template id="tab_search">
-    <v-ons-page>
-        <p style="text-align: center; margin-top: 10px;">
-            <ons-search-input
-                    placeholder="検索"
-            ></ons-search-input>
-        </p>
     </v-ons-page>
 </template>
 
 <!-- tab 4/4 -->
 <template id="tab_settings">
     <v-ons-page>
+        <v-ons-list>
+            <v-ons-list-header>Thumbnails and titles</v-ons-list-header>
+            <v-ons-list-item>
+                <div class="left">
+                    <img class="list-item__thumbnail" src="http://placekitten.com/g/40/40">
+                </div>
+                <div class="center">
+                    <span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
+                </div>
+            </v-ons-list-item>
+        </v-ons-list>
     </v-ons-page>
 </template>
 
@@ -383,20 +391,22 @@ const tabHome = {
             }, 1500)
         },
         getTodayMenuImgPath: function () {
-            var day = new Date()
-            var dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
-
+            let day = new Date()
+            let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
             return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
         },
         getTodayStr: function () {
-            var day = new Date()
-            var today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
+            let day = new Date()
+            let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
             return today
         }
     }
 };
 const tabCalendar = {
     template: '#tab_calendar',
+};
+const tabSearch = {
+    template: '#tab_search',
     data: function () {
         return {
             weeks: ['日', '月', '火', '水', '木', '金', '土'],
@@ -410,11 +420,11 @@ const tabCalendar = {
     },
     methods: {
         getMonthName: function (month) {
-            var monthName = ['January','February','March','April','May','June','July','August','September','October','November','December']
+            let monthName = ['January','February','March','April','May','June','July','August','September','October','November','December']
             return monthName[month - 1]
         },
         getMonthJapaneseName: function (month) {
-            var monthName = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+            let monthName = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
             return monthName[month - 1]
         },
         moveLastMonth: function () {
@@ -439,14 +449,14 @@ const tabCalendar = {
     computed: {
         calendar: function () {
             // 1日の曜日
-            var firstDay = new Date(this.calData.year, this.calData.month - 1, 1).getDay()
+            let firstDay = new Date(this.calData.year, this.calData.month - 1, 1).getDay()
             // 晦日の日にち
-            var lastDate = new Date(this.calData.year, this.calData.month, 0).getDate()
+            let lastDate = new Date(this.calData.year, this.calData.month, 0).getDate()
             // 日にちのカウント
-            var dayIdx = 1
-            var calendar = []
+            let dayIdx = 1
+            let calendar = []
             for (let w = 0; w < 6; w++) {
-                var week = []
+                let week = []
                 // 空白行をなくすため
                 if (lastDate < dayIdx) {
                     break
@@ -471,10 +481,6 @@ const tabCalendar = {
         }
     }
 };
-const tabSearch = {
-    key: 'search',
-    template: '#tab_search',
-};
 
 const tabSettings = {
     template: '#tab_settings',
@@ -491,18 +497,18 @@ const appTabbar = {
                 },
                 {
                     icon: 'fa-table',
-                    label: '献立表',
+                    label: '今週の献立',
                     page: tabCalendar
                 },
                 {
                     icon: 'fa-search',
                     label: '検索',
                     page: tabSearch,
-                    badge: 7
+                    badge: ''
                 },
                 {
                     icon: 'fa-sliders',
-                    label: '設定',
+                    label: 'その他',
                     page: tabSettings
                 }
             ]
@@ -616,8 +622,8 @@ new Vue({
     }
 
     #calendar-nav span {
-        /*display: inline-block;*/
-        /*width: 300px;*/
+        display: inline-block;
+        width: 300px;
     }
 
     #calendar-nav i:hover {
