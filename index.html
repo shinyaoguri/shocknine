@@ -121,7 +121,7 @@
     <v-ons-page>
         <v-ons-toolbar>
             <div class="center">news</div>
-            <div class="right"><v-ons-icon icon="fa-times" @click="$store.commit('navigator/pop')"></v-ons-icon></div>
+            <div class="right"><v-ons-icon icon="fa-times" @click="back()"></v-ons-icon></div>
         </v-ons-toolbar>
 
         <p style="text-align: center">
@@ -292,13 +292,13 @@
                     push(state, page) {
                         state.stack.push(page)
                     },
-                    pop(state) {
-                        if (state.stack.length() > 1) {
+                    pop (state) {
+                        if (state.stack.length > 1) {
                             state.stack.pop()
                         }
                     },
                     replace(state, page) {
-                        state.stack.pop()
+                        state.stack.pop();
                         state.stack.push(page)
                     },
                     reset(state, page) {
@@ -322,18 +322,6 @@
                         } else {
                             state.isOpen = !state.isOpen
                         }
-                    }
-                }
-            },
-            tabbar: {
-                strict: true,
-                namespaced: true,
-                state: {
-                    activeIndex: 0
-                },
-                mutations: {
-                    set(state, index) {
-                        state.activeIndex = index
                     }
                 }
             }
@@ -641,6 +629,9 @@
         methods: {
             toggleMenu: function () {
                 this.$store.commit('splitter/toggle')
+            },
+            back: function () {
+                this.$store.commit('navigator/pop')
             }
         }
     };
