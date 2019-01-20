@@ -62,6 +62,12 @@
                 </v-ons-toolbar-button>
             </div>
             <div class="center">{{ title }}</div>
+            <div class="right">
+                <v-ons-toolbar-button @click="toggleMenu">
+                    <v-ons-icon icon="fa-calendar"></v-ons-icon>
+                </v-ons-toolbar-button>
+            </div>
+
         </v-ons-toolbar>
 
         <div class="menu-image">
@@ -119,7 +125,7 @@
 <template id="splitter">
     <v-ons-splitter>
         <v-ons-splitter-side swipeable
-                             width="150px"
+                             width="60%"
                              collapse=""
                              side="left"
                              :open.sync="menuIsOpen"

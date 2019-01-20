@@ -3,8 +3,8 @@
     "name": "shocknine",
     "display": "standalone",
     "start_url": "index.html",
-    "background_color": "#000000",
-    "theme_color": "#5E3B4D",
+    "background_color": "#FFFFFF",
+    "theme_color": "#3F51B5",
     "icons": [
         {
             "src": "images/icon-android/icon-192-192.png",
