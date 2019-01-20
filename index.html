@@ -65,7 +65,7 @@
         </v-ons-toolbar>
 
         <div class="menu-image">
-            <img class="todays-image" :src="imageSrc" onerror="this.src='http://hoge.main.jp/handa-lunch-od/noimg.png'">
+            <img class="todays-image" :src="imageSrc" onerror="this.src='images/noimg.png'">
             <p>{{ todayStr }}</p>
         </div>
         <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
@@ -205,7 +205,7 @@
         </v-ons-pull-hook>
 
         <div class="menu-image">
-            <img class="todays-image" :src="imageSrc" onerror="this.src='http://hoge.main.jp/handa-lunch-od/noimg.png'">
+            <img class="todays-image" :src="imageSrc" onerror="this.src='images/noimg.png'">
             <p>{{ todayStr }}</p>
         </div>
         <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
