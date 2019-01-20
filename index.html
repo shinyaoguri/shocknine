@@ -349,211 +349,211 @@
     ////////////////
     // tabs
     ////////////////
-    const tabHome = {
-        template: '#tab_home',
-        data: function () {
-            return {
-                pullhookstate: 'initial',
-                ratio: 0,
-                now: null,
-                imageSrc: this.getTodayMenuImgPath(),
-                dayPath: this.getTodayMenuImgPath(),
-                todayStr: this.getTodayStr(),
-                todaysMenu: {
-                    id: 20180611,
-                    data: {
-                        year: 2018,
-                        month: 6,
-                        date: 11,
-                        day: 1,
-                        menuExist: true,
-                        cal_s: 668,
-                        cal_c: 847,
-                        menu: [
-                            {
-                                type: 'main',
-                                name: 'ごはん'
-                            },
-                            {
-                                type: 'sub',
-                                name: '★はるまき'
-                            },
-                            {
-                                type: 'sub',
-                                name: 'ぶたキムチいため'
-                            },
-                            {
-                                type: 'sub',
-                                name: 'ちゅうかふうたまごスープ'
-                            },
-                            {
-                                type: 'drink',
-                                name: '牛乳'
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        created: function () {
-            this.now = new Date()
-            setInterval(() => {
-                // this.now = new Date()
-                // console.log('hoge')
-            }, 100)
-        },
-        computed: {
-            today: function () {
-                return this.now.getSeconds()
-            }
-        },
-        methods: {
-            onPull(ratio) {
-                this.ratio = ratio
-            },
-            onAction(done) {
-                setTimeout(() => {
-                    this.imageSrc = this.getTodayMenuImgPath()
-                    done()
-                }, 1500)
-            },
-            getTodayMenuImgPath: function () {
-                let day = new Date()
-                let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
-                //return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
-                return ''
-            },
-            getTodayStr: function () {
-                let day = new Date()
-                let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
-                return today
-            }
-        }
-    };
-    const tabCalendar = {
-        template: '#tab_calendar',
-    };
-    const tabSearch = {
-        template: '#tab_search',
-        data: function () {
-            return {
-                weeks: ['日', '月', '火', '水', '木', '金', '土'],
-                calData: {year: 0, month: 0}
-            }
-        },
-        created: function () {
-            var date = new Date()
-            this.calData.year = date.getFullYear()
-            this.calData.month = date.getMonth() + 1
-        },
-        methods: {
-            getMonthName: function (month) {
-                let monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-                return monthName[month - 1]
-            },
-            getMonthJapaneseName: function (month) {
-                let monthName = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-                return monthName[month - 1]
-            },
-            moveLastMonth: function () {
-                if (this.calData.month === 1) {
-                    this.calData.year--
-                    this.calData.month = 12
-                } else {
-                    this.calData.month--
-                }
-            },
-            moveNextMonth: function () {
-                if (this.calData.month === 12) {
-                    this.calData.year++
-                    this.calData.month = 1
-                } else {
-                    this.calData.month++
-                }
-            }
-        },
-        computed: {
-            calendar: function () {
-                // 1日の曜日
-                let firstDay = new Date(this.calData.year, this.calData.month - 1, 1).getDay()
-                // 晦日の日にち
-                let lastDate = new Date(this.calData.year, this.calData.month, 0).getDate()
-                // 日にちのカウント
-                let dayIdx = 1
-                let calendar = []
-                for (let w = 0; w < 6; w++) {
-                    let week = []
-                    // 空白行をなくすため
-                    if (lastDate < dayIdx) {
-                        break
-                    }
-                    for (let d = 0; d < 7; d++) {
-                        if (w === 0 && d < firstDay) {
-                            week[d] = {day: ''}
-                        } else if (w === 6 && lastDate < dayIdx) {
-                            week[d] = {day: ''}
-                            dayIdx++
-                        } else if (lastDate < dayIdx) {
-                            week[d] = {day: ''}
-                            dayIdx++
-                        } else {
-                            week[d] = {day: dayIdx}
-                            dayIdx++
-                        }
-                    }
-                    calendar.push(week)
-                }
-                return calendar
-            }
-        }
-    };
-    const tabSettings = {
-        template: '#tab_settings',
-    };
-    const appTabbar = {
-        template: '#tabbar',
-        data: function () {
-            return {
-                tabs: [
-                    {
-                        icon: 'fa-cutlery',
-                        label: '今日の献立',
-                        page: tabHome
-                    },
-                    {
-                        icon: 'fa-table',
-                        label: '今週の献立',
-                        page: tabCalendar
-                    },
-                    {
-                        icon: 'fa-search',
-                        label: '検索',
-                        page: tabSearch,
-                        badge: ''
-                    },
-                    {
-                        icon: 'fa-sliders',
-                        label: 'その他',
-                        page: tabSettings
-                    }
-                ]
-            }
-        },
-        methods: {},
-        computed: {
-            index: {
-                get() {
-                    return store.state.tabbar.activeIndex
-                },
-                set(newVal) {
-                    store.commit('tabbar/set', newVal)
-                }
-            },
-            title: function () {
-                return this.tabs[this.index].label
-            }
-        }
-    };
+    // const tabHome = {
+    //     template: '#tab_home',
+    //     data: function () {
+    //         return {
+    //             pullhookstate: 'initial',
+    //             ratio: 0,
+    //             now: null,
+    //             imageSrc: this.getTodayMenuImgPath(),
+    //             dayPath: this.getTodayMenuImgPath(),
+    //             todayStr: this.getTodayStr(),
+    //             todaysMenu: {
+    //                 id: 20180611,
+    //                 data: {
+    //                     year: 2018,
+    //                     month: 6,
+    //                     date: 11,
+    //                     day: 1,
+    //                     menuExist: true,
+    //                     cal_s: 668,
+    //                     cal_c: 847,
+    //                     menu: [
+    //                         {
+    //                             type: 'main',
+    //                             name: 'ごはん'
+    //                         },
+    //                         {
+    //                             type: 'sub',
+    //                             name: '★はるまき'
+    //                         },
+    //                         {
+    //                             type: 'sub',
+    //                             name: 'ぶたキムチいため'
+    //                         },
+    //                         {
+    //                             type: 'sub',
+    //                             name: 'ちゅうかふうたまごスープ'
+    //                         },
+    //                         {
+    //                             type: 'drink',
+    //                             name: '牛乳'
+    //                         }
+    //                     ]
+    //                 }
+    //             }
+    //         }
+    //     },
+    //     created: function () {
+    //         this.now = new Date()
+    //         setInterval(() => {
+    //             // this.now = new Date()
+    //             // console.log('hoge')
+    //         }, 100)
+    //     },
+    //     computed: {
+    //         today: function () {
+    //             return this.now.getSeconds()
+    //         }
+    //     },
+    //     methods: {
+    //         onPull(ratio) {
+    //             this.ratio = ratio
+    //         },
+    //         onAction(done) {
+    //             setTimeout(() => {
+    //                 this.imageSrc = this.getTodayMenuImgPath()
+    //                 done()
+    //             }, 1500)
+    //         },
+    //         getTodayMenuImgPath: function () {
+    //             let day = new Date()
+    //             let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
+    //             //return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
+    //             return ''
+    //         },
+    //         getTodayStr: function () {
+    //             let day = new Date()
+    //             let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
+    //             return today
+    //         }
+    //     }
+    // };
+    // const tabCalendar = {
+    //     template: '#tab_calendar',
+    // };
+    // const tabSearch = {
+    //     template: '#tab_search',
+    //     data: function () {
+    //         return {
+    //             weeks: ['日', '月', '火', '水', '木', '金', '土'],
+    //             calData: {year: 0, month: 0}
+    //         }
+    //     },
+    //     created: function () {
+    //         var date = new Date()
+    //         this.calData.year = date.getFullYear()
+    //         this.calData.month = date.getMonth() + 1
+    //     },
+    //     methods: {
+    //         getMonthName: function (month) {
+    //             let monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    //             return monthName[month - 1]
+    //         },
+    //         getMonthJapaneseName: function (month) {
+    //             let monthName = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+    //             return monthName[month - 1]
+    //         },
+    //         moveLastMonth: function () {
+    //             if (this.calData.month === 1) {
+    //                 this.calData.year--
+    //                 this.calData.month = 12
+    //             } else {
+    //                 this.calData.month--
+    //             }
+    //         },
+    //         moveNextMonth: function () {
+    //             if (this.calData.month === 12) {
+    //                 this.calData.year++
+    //                 this.calData.month = 1
+    //             } else {
+    //                 this.calData.month++
+    //             }
+    //         }
+    //     },
+    //     computed: {
+    //         calendar: function () {
+    //             // 1日の曜日
+    //             let firstDay = new Date(this.calData.year, this.calData.month - 1, 1).getDay()
+    //             // 晦日の日にち
+    //             let lastDate = new Date(this.calData.year, this.calData.month, 0).getDate()
+    //             // 日にちのカウント
+    //             let dayIdx = 1
+    //             let calendar = []
+    //             for (let w = 0; w < 6; w++) {
+    //                 let week = []
+    //                 // 空白行をなくすため
+    //                 if (lastDate < dayIdx) {
+    //                     break
+    //                 }
+    //                 for (let d = 0; d < 7; d++) {
+    //                     if (w === 0 && d < firstDay) {
+    //                         week[d] = {day: ''}
+    //                     } else if (w === 6 && lastDate < dayIdx) {
+    //                         week[d] = {day: ''}
+    //                         dayIdx++
+    //                     } else if (lastDate < dayIdx) {
+    //                         week[d] = {day: ''}
+    //                         dayIdx++
+    //                     } else {
+    //                         week[d] = {day: dayIdx}
+    //                         dayIdx++
+    //                     }
+    //                 }
+    //                 calendar.push(week)
+    //             }
+    //             return calendar
+    //         }
+    //     }
+    // };
+    // const tabSettings = {
+    //     template: '#tab_settings',
+    // };
+    // const appTabbar = {
+    //     template: '#tabbar',
+    //     data: function () {
+    //         return {
+    //             tabs: [
+    //                 {
+    //                     icon: 'fa-cutlery',
+    //                     label: '今日の献立',
+    //                     page: tabHome
+    //                 },
+    //                 {
+    //                     icon: 'fa-table',
+    //                     label: '今週の献立',
+    //                     page: tabCalendar
+    //                 },
+    //                 {
+    //                     icon: 'fa-search',
+    //                     label: '検索',
+    //                     page: tabSearch,
+    //                     badge: ''
+    //                 },
+    //                 {
+    //                     icon: 'fa-sliders',
+    //                     label: 'その他',
+    //                     page: tabSettings
+    //                 }
+    //             ]
+    //         }
+    //     },
+    //     methods: {},
+    //     computed: {
+    //         index: {
+    //             get() {
+    //                 return store.state.tabbar.activeIndex
+    //             },
+    //             set(newVal) {
+    //                 store.commit('tabbar/set', newVal)
+    //             }
+    //         },
+    //         title: function () {
+    //             return this.tabs[this.index].label
+    //         }
+    //     }
+    // };
 
     //TODO tabで軽く実装したものをSplitterに移行する
 
