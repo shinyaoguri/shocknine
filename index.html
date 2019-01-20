@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- app info -->
-    <meta name="description" content="school lunch app">
+    <meta name="description" content="handa school lunch information app">
     <meta name="author" content="shinya oguri">
     <meta name="theme-color" content="#5E3B4D">
     <title>shocknine</title>
@@ -71,7 +71,7 @@
         </v-ons-toolbar>
 
         <div class="menu-image">
-            <img class="todays-image" :src="imageSrc" onerror="this.src='images/assets/noimg.png'">
+            <img class="todays-image" :src="imageSrc">
             <p>{{ todayStr }}</p>
         </div>
         <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
