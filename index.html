@@ -261,9 +261,6 @@
         <v-ons-list>
             <v-ons-list-header>Thumbnails and titles</v-ons-list-header>
             <v-ons-list-item>
-                <div class="left">
-                    <img class="list-item__thumbnail" src="http://placekitten.com/g/40/40">
-                </div>
                 <div class="center">
                     <span class="list-item__title">Cutest kitty</span><span
                         class="list-item__subtitle">On the Internet</span>
@@ -417,7 +414,8 @@
             getTodayMenuImgPath: function () {
                 let day = new Date()
                 let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
-                return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
+                //return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
+                return ''
             },
             getTodayStr: function () {
                 let day = new Date()
@@ -625,7 +623,8 @@
             getTodayMenuImgPath: function () {
                 let day = new Date()
                 let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
-                return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
+                //return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
+                return 'images/noimg.png'
             },
             getTodayStr: function () {
                 let day = new Date()
