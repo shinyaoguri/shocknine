@@ -51,44 +51,8 @@
 </head>
 
 <body style="position:fixed;">
-<!-- navigator -->
-<template id="main">
-    <v-ons-navigator :page-stack="pageStack"></v-ons-navigator>
-</template>
 
-<!-- splitter -->
-<template id="splitter">
-    <v-ons-splitter>
-        <v-ons-splitter-side swipeable
-                             width="150px"
-                             collapse=""
-                             side="left"
-                             :open.sync="menuIsOpen"
-        >
-            <v-ons-page>
-                <v-ons-list>
-                    <v-ons-list-item v-for="page in pages" :key="page.title"
-                                     tappable
-                                     modifier="chevron"
-                                     @click="loadPage(page.page)"
-                    >
-                        <div class="left">
-                            <v-ons-icon :icon="page.icon"></v-ons-icon>
-                        </div>
-                        <div class="center">{{ page.title }}</div>
-                    </v-ons-list-item>
-                </v-ons-list>
-            </v-ons-page>
-
-        </v-ons-splitter-side>
-
-        <v-ons-splitter-content>
-            <home-page></home-page>
-        </v-ons-splitter-content>
-    </v-ons-splitter>
-</template>
-
-<!-- main page 1/3 -->
+<!-- main page -->
 <template id="home">
     <v-ons-page>
         <v-ons-toolbar>
@@ -97,7 +61,7 @@
                     <v-ons-icon icon="fa-bars"></v-ons-icon>
                 </v-ons-toolbar-button>
             </div>
-            <div class="center">今日の献立</div>
+            <div class="center">{{ title }}</div>
         </v-ons-toolbar>
 
         <div class="menu-image">
@@ -116,12 +80,16 @@
     </v-ons-page>
 </template>
 
-<!-- main page 2/3 -->
+<!-- side menu page 1/3 -->
 <template id="news">
     <v-ons-page>
         <v-ons-toolbar>
+            <div class="left">
+                <v-ons-back-button>戻る</v-ons-back-button>
+            </div>
             <div class="center">news</div>
-            <div class="right"><v-ons-icon icon="fa-times" @click="back()"></v-ons-icon></div>
+            <div class="right">
+            </div>
         </v-ons-toolbar>
 
         <p style="text-align: center">
@@ -130,18 +98,69 @@
     </v-ons-page>
 </template>
 
-<!-- side menu 3/3 -->
+<!-- side menu page 3/3 -->
 <template id="settings">
     <v-ons-page>
         <v-ons-toolbar>
+            <div class="left">
+                <v-ons-back-button>戻る</v-ons-back-button>
+            </div>
             <div class="center">setting</div>
-            <div class="right"><v-ons-icon icon="fa-times" @click=""></v-ons-icon></div>
+            <div class="right">
+            </div>
         </v-ons-toolbar>
         <p style="text-align: center">
             Change the settings.
         </p>
     </v-ons-page>
 </template>
+
+<!-- splitter -->
+<template id="splitter">
+    <v-ons-splitter>
+        <v-ons-splitter-side swipeable
+                             width="150px"
+                             collapse=""
+                             side="left"
+                             :open.sync="menuIsOpen"
+        >
+            <v-ons-page>
+                <v-ons-list>
+                    <v-ons-list-header>メニュー</v-ons-list-header>
+                    <v-ons-list-item v-for="page in sideMenuPages" :key="page.title"
+                                     tappable
+                                     modifier="chevron"
+                                     @click="loadPage(page.page)"
+                    >
+                        <div class="left">
+                            <v-ons-icon :icon="page.icon"></v-ons-icon>
+                        </div>
+                        <div class="center">{{ page.title }}</div>
+                    </v-ons-list-item>
+                    <v-ons-list-header>リンク</v-ons-list-header>
+                    <v-ons-list-item v-for="link in links" :key="link.title"
+                                     tappable
+                                     @click="loadLink(link.url)"
+                    >
+                        <div class="left">
+                            <v-ons-icon :icon="link.icon"></v-ons-icon>
+                        </div>
+                        <div class="center">{{ link.title }}</div>
+                    </v-ons-list-item>
+                </v-ons-list>
+            </v-ons-page>
+
+        </v-ons-splitter-side>
+
+        <v-ons-splitter-content>
+            <v-ons-navigator :page-stack="pageStack"
+                             :pop-page="storePop"
+                             :options="{}"
+            ></v-ons-navigator>
+        </v-ons-splitter-content>
+    </v-ons-splitter>
+</template>
+
 
 <!-- tabbar -->
 <template id="tabbar">
@@ -156,7 +175,6 @@
         </v-ons-tabbar>
     </v-ons-page>
 </template>
-
 <!-- tab 1/4 -->
 <template id="tab_home">
     <v-ons-page>
@@ -202,13 +220,11 @@
 
     </v-ons-page>
 </template>
-
 <!-- tab 2/4 -->
 <template id="tab_calendar">
     <v-ons-page>
     </v-ons-page>
 </template>
-
 <!-- tab 3/4 -->
 <template id="tab_search">
     <v-ons-page>
@@ -239,7 +255,6 @@
 
     </v-ons-page>
 </template>
-
 <!-- tab 4/4 -->
 <template id="tab_settings">
     <v-ons-page>
@@ -292,7 +307,7 @@
                     push(state, page) {
                         state.stack.push(page)
                     },
-                    pop (state) {
+                    pop(state) {
                         if (state.stack.length > 1) {
                             state.stack.pop()
                         }
@@ -536,14 +551,13 @@
         }
     };
 
-    ////////////////
-    // splitter
-    ////////////////
+    //TODO tabで軽く実装したものをSplitterに移行する
 
     const homePage = {
         template: '#home',
         data: function () {
             return {
+                title: '今日の献立',
                 pullhookstate: 'initial',
                 ratio: 0,
                 now: null,
@@ -620,10 +634,17 @@
             },
             toggleMenu: function () {
                 this.$store.commit('splitter/toggle')
+            },
+            push: function () {
+                //this.$emit('push-page', page2);
+                store.commit('navigator/push', page2)
             }
         }
     };
 
+    ////////////////
+    // side menu
+    ////////////////
     const newsPage = {
         template: '#news',
         methods: {
@@ -645,11 +666,20 @@
         }
     };
 
-    const appSplitter = {
+
+    ////////////////
+    // main
+    ////////////////
+    new Vue({
+        el: '#app',
         template: "#splitter",
-        data() {
+        store: store,
+        beforeCreate() {
+            store.commit('navigator/push', homePage)
+        },
+        data: function () {
             return {
-                pages: [
+                sideMenuPages: [
                     {
                         title: 'news',
                         icon: 'fa-home',
@@ -660,51 +690,82 @@
                         icon: 'fa-home',
                         page: settingsPage
                     }
+                ],
+                links: [
+                    {
+                        title: '今日の献立',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyonokondate.html'
+                    },
+                    {
+                        title: '献立表',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kondate.html'
+                    },
+                    {
+                        title: '食物アレルギーのある児童生徒への対応',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/allergytaio.html'
+                    },
+                    {
+                        title: '放射線測定結果',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
+                    },
+                    {
+                        title: '給食だより',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokudayori.html'
+                    },
+                    {
+                        title: '学校給食費',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokuhi.html'
+                    },
+                    {
+                        title: '台風等における学校給食の取扱い',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/taifu.html'
+                    },
+                    {
+                        title: '給食物資の産地',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushoku.html'
+                    },
+                    {
+                        title: '学校給食レシピ',
+                        icon: 'fa-home',
+                        url: 'http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyuusyokuresipi1.html'
+                    }
                 ]
-            };
-        },
-        methods: {
-            loadPage: function (newPage) {
-                this.$store.commit('navigator/push', newPage)
-            }
-        },
-        computed: {
-            menuIsOpen: {
-                get: function () {
-                    return this.$store.state.splitter.isOpen
-                },
-                set: function (newValue) {
-                    this.$store.commit('splitter/toggle', newValue)
-                }
-            }
-        },
-        components: {
-            homePage: homePage
-        }
-    };
-
-
-    ////////////////
-    // main
-    ////////////////
-    new Vue({
-        el: '#app',
-        template: '#main',
-        store: store,
-        beforeCreate() {
-            store.commit('navigator/push', appSplitter)
-        },
-        methods: {
-            storePop: function () {
-                this.$store.commit('navigator/pop')
             }
         },
         computed: {
             pageStack: function () {
-                return this.$store.state.navigator.stack
+                return store.state.navigator.stack
+            },
+            menuIsOpen: {
+                get: function () {
+                    return store.state.splitter.isOpen
+                },
+                set: function (newValue) {
+                    store.commit('splitter/toggle', newValue)
+                }
             },
             options: function () {
-                return this.$store.state.navigator.options
+                return store.state.navigator.options
+            }
+        },
+        methods: {
+            storePop: function () {
+                store.commit('navigator/pop')
+            },
+            loadPage: function (newPage) {
+                store.commit('navigator/push', newPage)
+                store.commit('splitter/toggle', false)
+            },
+            loadLink: function (url) {
+                window.open(url, '_blank')
             }
         }
     });
