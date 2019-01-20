@@ -211,7 +211,7 @@
         </v-ons-pull-hook>
 
         <div class="menu-image">
-            <img class="todays-image" :src="imageSrc" onerror="this.src='images/assets/noimg.png'">
+            <img class="todays-image" :src="imageSrc">
             <p>{{ todayStr }}</p>
         </div>
         <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
