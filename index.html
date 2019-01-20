@@ -71,7 +71,7 @@
         </v-ons-toolbar>
 
         <div class="menu-image">
-            <img class="todays-image" :src="imageSrc" onerror="this.src='images/noimg.png'">
+            <img class="todays-image" :src="imageSrc" onerror="this.src='images/assets/noimg.png'">
             <p>{{ todayStr }}</p>
         </div>
         <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
@@ -143,13 +143,13 @@
                         </div>
                         <div class="center">{{ page.title }}</div>
                     </v-ons-list-item>
-                    <v-ons-list-header>リンク</v-ons-list-header>
+                    <v-ons-list-header>外部リンク</v-ons-list-header>
                     <v-ons-list-item v-for="link in links" :key="link.title"
                                      tappable
                                      @click="loadLink(link.url)"
                     >
                         <div class="left">
-                            <v-ons-icon :icon="link.icon"></v-ons-icon>
+                            <img class="list-item__thumbnail" :src=link.icon>
                         </div>
                         <div class="center">{{ link.title }}</div>
                     </v-ons-list-item>
@@ -211,7 +211,7 @@
         </v-ons-pull-hook>
 
         <div class="menu-image">
-            <img class="todays-image" :src="imageSrc" onerror="this.src='images/noimg.png'">
+            <img class="todays-image" :src="imageSrc" onerror="this.src='images/assets/noimg.png'">
             <p>{{ todayStr }}</p>
         </div>
         <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
@@ -630,7 +630,7 @@
                 let day = new Date()
                 let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
                 //return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
-                return 'images/noimg.png'
+                return 'images/assets/noimg.png'
             },
             getTodayStr: function () {
                 let day = new Date()
@@ -699,48 +699,48 @@
                 links: [
                     {
                         title: '今日の献立',
-                        icon: 'fa-home',
+                        icon: 'images/assets/breakfast.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyonokondate.html'
                     },
                     {
                         title: '献立表',
-                        icon: 'fa-home',
+                        icon: 'images/assets/menu.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kondate.html'
                     },
                     {
                         title: '食物アレルギーのある児童生徒への対応',
-                        icon: 'fa-home',
+                        icon: 'images/assets/danger.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/allergytaio.html'
                     },
                     {
-                        title: '放射線測定結果',
-                        icon: 'fa-home',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
-                    },
-                    {
                         title: '給食だより',
-                        icon: 'fa-home',
+                        icon: 'images/assets/newspaper.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokudayori.html'
                     },
                     {
-                        title: '学校給食費',
-                        icon: 'fa-home',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokuhi.html'
-                    },
-                    {
                         title: '台風等における学校給食の取扱い',
-                        icon: 'fa-home',
+                        icon: 'images/assets/wind.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/taifu.html'
                     },
                     {
                         title: '給食物資の産地',
-                        icon: 'fa-home',
+                        icon: 'images/assets/farmer.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushoku.html'
                     },
                     {
                         title: '学校給食レシピ',
-                        icon: 'fa-home',
+                        icon: 'images/assets/whisk.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyuusyokuresipi1.html'
+                    },
+                    {
+                        title: '学校給食費',
+                        icon: 'images/assets/piggy-bank.png',
+                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokuhi.html'
+                    },
+                    {
+                        title: '放射線測定結果',
+                        icon: 'images/assets/speedometer.png',
+                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
                     }
                 ]
             }
