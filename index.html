@@ -104,7 +104,7 @@
     </v-ons-page>
 </template>
 
-<!-- side menu page 3/3 -->
+<!-- side menu page 2/3 -->
 <template id="settings">
     <v-ons-page>
         <v-ons-toolbar>
@@ -131,6 +131,10 @@
                              :open.sync="menuIsOpen"
         >
             <v-ons-page>
+                <div class="profile-pic">
+                    <img src="images/icon-android/icon-512-512.png">
+                </div>
+
                 <v-ons-list>
                     <v-ons-list-header>メニュー</v-ons-list-header>
                     <v-ons-list-item v-for="page in sideMenuPages" :key="page.title"
@@ -146,6 +150,18 @@
                     <v-ons-list-header>外部リンク</v-ons-list-header>
                     <v-ons-list-item v-for="link in links" :key="link.title"
                                      tappable
+                                     modifier="longdivider, tappable"
+                                     @click="loadLink(link.url)"
+                    >
+                        <div class="left">
+                            <img class="list-item__thumbnail" :src=link.icon>
+                        </div>
+                        <div class="center">{{ link.title }}</div>
+                    </v-ons-list-item>
+                    <v-ons-list-header>その他</v-ons-list-header>
+                    <v-ons-list-item v-for="link in otherLinks" :key="link.title"
+                                     tappable
+                                     modifier="longdivider, tappable"
                                      @click="loadLink(link.url)"
                     >
                         <div class="left">
@@ -165,115 +181,6 @@
             ></v-ons-navigator>
         </v-ons-splitter-content>
     </v-ons-splitter>
-</template>
-
-
-<!-- tabbar -->
-<template id="tabbar">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="center">{{ title }}</div>
-        </v-ons-toolbar>
-
-        <v-ons-tabbar :tabs="tabs"
-                      :index.sync="index"
-        >
-        </v-ons-tabbar>
-    </v-ons-page>
-</template>
-<!-- tab 1/4 -->
-<template id="tab_home">
-    <v-ons-page>
-        <v-ons-pull-hook
-                :action="onAction"
-                :fixed-content="md"
-                :height="md ? 84 : 64"
-                :on-pull="md && onPull || null"
-                @changestate="pullhookstate = $event.state"
-        >
-            <!-- Show this on iOS -->
-            <v-ons-icon v-if="!md"
-                        size="22px"
-                        class="pull-hook-spinner"
-                        :icon="pullhookstate === 'action' ? 'fa-spinner' : 'fa-arrow-down'"
-                        :rotate="pullhookstate === 'preaction' && 180"
-                        :spin="pullhookstate === 'action'"
-            ></v-ons-icon>
-
-            <!-- Show this on Material Design -->
-            <div v-else class="pull-hook-progress">
-                <v-ons-progress-circular
-                        :value="ratio * 100"
-                        :indeterminate="state === 'action'"
-                        :style="{ transform: 'rotate(${ratio}turn)' }"
-                ></v-ons-progress-circular>
-            </div>
-        </v-ons-pull-hook>
-
-        <div class="menu-image">
-            <img class="todays-image" :src="imageSrc">
-            <p>{{ todayStr }}</p>
-        </div>
-        <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
-            <v-ons-list-header>
-                {{item.type}}
-            </v-ons-list-header>
-            <v-ons-list-item>
-                {{item.name}}
-            </v-ons-list-item>
-
-        </v-ons-list>
-
-    </v-ons-page>
-</template>
-<!-- tab 2/4 -->
-<template id="tab_calendar">
-    <v-ons-page>
-    </v-ons-page>
-</template>
-<!-- tab 3/4 -->
-<template id="tab_search">
-    <v-ons-page>
-        <p style="text-align: center; margin-top: 10px;">
-            <ons-search-input
-                    placeholder="検索"
-            ></ons-search-input>
-        </p>
-        <div id="calendar-nav">
-            <button @click="moveLastMonth()">
-                <v-ons-icon icon="fa-angle-left"></v-ons-icon>
-            </button>
-            <span>{{calData.year}} - {{getMonthName(calData.month)}}</span>
-            <button @click="moveNextMonth()"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
-        </div>
-        <table id="calendar" class="table table-bordered">
-            <thead>
-            <tr>
-                <th v-for="week in weeks">{{week}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="week in calendar">
-                <td v-for="day in week">{{day.day}}</td>
-            </tr>
-            </tbody>
-        </table>
-
-    </v-ons-page>
-</template>
-<!-- tab 4/4 -->
-<template id="tab_settings">
-    <v-ons-page>
-        <v-ons-list>
-            <v-ons-list-header>Thumbnails and titles</v-ons-list-header>
-            <v-ons-list-item>
-                <div class="center">
-                    <span class="list-item__title">Cutest kitty</span><span
-                        class="list-item__subtitle">On the Internet</span>
-                </div>
-            </v-ons-list-item>
-        </v-ons-list>
-    </v-ons-page>
 </template>
 
 <!-- app -->
@@ -345,215 +252,6 @@
             }
         }
     });
-
-    ////////////////
-    // tabs
-    ////////////////
-    // const tabHome = {
-    //     template: '#tab_home',
-    //     data: function () {
-    //         return {
-    //             pullhookstate: 'initial',
-    //             ratio: 0,
-    //             now: null,
-    //             imageSrc: this.getTodayMenuImgPath(),
-    //             dayPath: this.getTodayMenuImgPath(),
-    //             todayStr: this.getTodayStr(),
-    //             todaysMenu: {
-    //                 id: 20180611,
-    //                 data: {
-    //                     year: 2018,
-    //                     month: 6,
-    //                     date: 11,
-    //                     day: 1,
-    //                     menuExist: true,
-    //                     cal_s: 668,
-    //                     cal_c: 847,
-    //                     menu: [
-    //                         {
-    //                             type: 'main',
-    //                             name: 'ごはん'
-    //                         },
-    //                         {
-    //                             type: 'sub',
-    //                             name: '★はるまき'
-    //                         },
-    //                         {
-    //                             type: 'sub',
-    //                             name: 'ぶたキムチいため'
-    //                         },
-    //                         {
-    //                             type: 'sub',
-    //                             name: 'ちゅうかふうたまごスープ'
-    //                         },
-    //                         {
-    //                             type: 'drink',
-    //                             name: '牛乳'
-    //                         }
-    //                     ]
-    //                 }
-    //             }
-    //         }
-    //     },
-    //     created: function () {
-    //         this.now = new Date()
-    //         setInterval(() => {
-    //             // this.now = new Date()
-    //             // console.log('hoge')
-    //         }, 100)
-    //     },
-    //     computed: {
-    //         today: function () {
-    //             return this.now.getSeconds()
-    //         }
-    //     },
-    //     methods: {
-    //         onPull(ratio) {
-    //             this.ratio = ratio
-    //         },
-    //         onAction(done) {
-    //             setTimeout(() => {
-    //                 this.imageSrc = this.getTodayMenuImgPath()
-    //                 done()
-    //             }, 1500)
-    //         },
-    //         getTodayMenuImgPath: function () {
-    //             let day = new Date()
-    //             let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
-    //             //return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
-    //             return ''
-    //         },
-    //         getTodayStr: function () {
-    //             let day = new Date()
-    //             let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
-    //             return today
-    //         }
-    //     }
-    // };
-    // const tabCalendar = {
-    //     template: '#tab_calendar',
-    // };
-    // const tabSearch = {
-    //     template: '#tab_search',
-    //     data: function () {
-    //         return {
-    //             weeks: ['日', '月', '火', '水', '木', '金', '土'],
-    //             calData: {year: 0, month: 0}
-    //         }
-    //     },
-    //     created: function () {
-    //         var date = new Date()
-    //         this.calData.year = date.getFullYear()
-    //         this.calData.month = date.getMonth() + 1
-    //     },
-    //     methods: {
-    //         getMonthName: function (month) {
-    //             let monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    //             return monthName[month - 1]
-    //         },
-    //         getMonthJapaneseName: function (month) {
-    //             let monthName = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-    //             return monthName[month - 1]
-    //         },
-    //         moveLastMonth: function () {
-    //             if (this.calData.month === 1) {
-    //                 this.calData.year--
-    //                 this.calData.month = 12
-    //             } else {
-    //                 this.calData.month--
-    //             }
-    //         },
-    //         moveNextMonth: function () {
-    //             if (this.calData.month === 12) {
-    //                 this.calData.year++
-    //                 this.calData.month = 1
-    //             } else {
-    //                 this.calData.month++
-    //             }
-    //         }
-    //     },
-    //     computed: {
-    //         calendar: function () {
-    //             // 1日の曜日
-    //             let firstDay = new Date(this.calData.year, this.calData.month - 1, 1).getDay()
-    //             // 晦日の日にち
-    //             let lastDate = new Date(this.calData.year, this.calData.month, 0).getDate()
-    //             // 日にちのカウント
-    //             let dayIdx = 1
-    //             let calendar = []
-    //             for (let w = 0; w < 6; w++) {
-    //                 let week = []
-    //                 // 空白行をなくすため
-    //                 if (lastDate < dayIdx) {
-    //                     break
-    //                 }
-    //                 for (let d = 0; d < 7; d++) {
-    //                     if (w === 0 && d < firstDay) {
-    //                         week[d] = {day: ''}
-    //                     } else if (w === 6 && lastDate < dayIdx) {
-    //                         week[d] = {day: ''}
-    //                         dayIdx++
-    //                     } else if (lastDate < dayIdx) {
-    //                         week[d] = {day: ''}
-    //                         dayIdx++
-    //                     } else {
-    //                         week[d] = {day: dayIdx}
-    //                         dayIdx++
-    //                     }
-    //                 }
-    //                 calendar.push(week)
-    //             }
-    //             return calendar
-    //         }
-    //     }
-    // };
-    // const tabSettings = {
-    //     template: '#tab_settings',
-    // };
-    // const appTabbar = {
-    //     template: '#tabbar',
-    //     data: function () {
-    //         return {
-    //             tabs: [
-    //                 {
-    //                     icon: 'fa-cutlery',
-    //                     label: '今日の献立',
-    //                     page: tabHome
-    //                 },
-    //                 {
-    //                     icon: 'fa-table',
-    //                     label: '今週の献立',
-    //                     page: tabCalendar
-    //                 },
-    //                 {
-    //                     icon: 'fa-search',
-    //                     label: '検索',
-    //                     page: tabSearch,
-    //                     badge: ''
-    //                 },
-    //                 {
-    //                     icon: 'fa-sliders',
-    //                     label: 'その他',
-    //                     page: tabSettings
-    //                 }
-    //             ]
-    //         }
-    //     },
-    //     methods: {},
-    //     computed: {
-    //         index: {
-    //             get() {
-    //                 return store.state.tabbar.activeIndex
-    //             },
-    //             set(newVal) {
-    //                 store.commit('tabbar/set', newVal)
-    //             }
-    //         },
-    //         title: function () {
-    //             return this.tabs[this.index].label
-    //         }
-    //     }
-    // };
 
     //TODO tabで軽く実装したものをSplitterに移行する
 
@@ -742,6 +440,24 @@
                         icon: 'images/assets/speedometer.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
                     }
+                ],
+                otherLinks: [
+                    {
+                        title: '半田市',
+                        icon: 'images/assets/handa.png',
+                        url: 'http://www.city.handa.lg.jp'
+                    },
+                    {
+                        title: '名古屋大学 Media&Design Group',
+                        icon: 'images/assets/yes-t-logo-front-bk.png',
+                        url: 'http://www.mdg.ss.is.nagoya-u.ac.jp'
+                    },
+                    {
+                        title: '開発者',
+                        icon: 'images/assets/ogrium.png',
+                        url: 'https://shinyaoguri.com'
+                    }
+
                 ]
             }
         },
@@ -792,9 +508,9 @@
 
     .menu-image p {
         position: absolute;
-        top: 0px;
-        left: 0px;
-        margin: 0px;
+        top: 0;
+        left: 0;
+        margin: 0;
         color: white;
         background: lightsalmon;
         font-size: 35px;
@@ -805,6 +521,22 @@
 
     .todays-image {
         width: 100%;
+    }
+
+    .profile-pic {
+        width: 100%;
+        background-color: #fff;
+        border-bottom: 1px solid #DDD;
+        color: rgba(0, 0, 0, .56);
+        padding-bottom: 8px;
+    }
+    .page--material .profile-pic {
+        background-color: #f6f6f6;
+    }
+
+    .profile-pic > img {
+        display: block;
+        max-width: 50%;
     }
 
     .pull-hook-spinner {
@@ -821,7 +553,7 @@
         position: relative;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
         display: inline-block;
-        line-height: 0px;
+        line-height: 0;
     }
 
     .pull-hook-progress .progress-circular {
