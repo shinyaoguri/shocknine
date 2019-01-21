@@ -59,8 +59,88 @@
                     <v-ons-icon icon="fa-calendar"></v-ons-icon>
                 </v-ons-toolbar-button>
             </div>
-
         </v-ons-toolbar>
+
+        <v-ons-card>
+            <v-ons-row>
+                <v-ons-col width="40%">
+                    <img src="images/assets/noimg.png" style="width: 100%">
+                </v-ons-col>
+                <v-ons-col>
+                    <div class="content">
+                        <div>
+                            <img style="width: 20px" src="images/assets/food_gohan_hakumai.png">
+                            <span>ごはん</span>
+                        </div>
+                        <div>
+                            <img style="width: 20px" src="images/assets/food_gohan_hakumai.png">
+                            <span>とりめしのぐ</span>
+                        </div>
+                        <div>
+                            <img style="width: 20px" src="images/assets/food_gohan_hakumai.png">
+                            <span>★さんまのみぞれに</span>
+                        </div>
+                    </div>
+                </v-ons-col>
+                <v-ons-col>
+                    <div>
+                        <img style="width: 20px" src="images/assets/food_gohan_hakumai.png">
+                        <span>さわにわん</span>
+                    </div>
+                    <div>
+                        <img style="width: 20px" src="images/assets/food_gohan_hakumai.png">
+                        <span>★ういろう</span>
+                    </div>
+                    <div>
+                        <img style="width: 20px" src="images/assets/food_gohan_hakumai.png">
+                        <span>牛乳</span>
+                    </div>
+                </v-ons-col>
+            </v-ons-row>
+        </v-ons-card>
+
+        <v-ons-row>
+            <v-ons-col>
+                <v-ons-card>
+                    <div>月</div>
+                    <div>
+                        <img src="images/assets/noimg.png" style="width: 100%">
+                    </div>
+                </v-ons-card>
+            </v-ons-col>
+            <v-ons-col>
+                <v-ons-card>
+                    <div>火</div>
+                    <div>
+                        <img src="images/assets/noimg.png" style="width: 100%">
+                    </div>
+                </v-ons-card>
+            </v-ons-col>
+            <v-ons-col>
+                <v-ons-card>
+                    <div>水</div>
+                    <div>
+                        <img src="images/assets/noimg.png" style="width: 100%">
+                    </div>
+                </v-ons-card>
+            </v-ons-col>
+            <v-ons-col>
+                <v-ons-card>
+                    <div>木</div>
+                    <div>
+                        <img src="images/assets/noimg.png" style="width: 100%">
+                    </div>
+                </v-ons-card>
+            </v-ons-col>
+            <v-ons-col>
+                <v-ons-card>
+                    <div>金</div>
+                    <div>
+                        <img src="images/assets/noimg.png" style="width: 100%">
+                    </div>
+                </v-ons-card>
+            </v-ons-col>
+        </v-ons-row>
 
     </v-ons-page>
 </template>
@@ -83,67 +163,22 @@
     </v-ons-page>
 </template>
 
-<!-- side menu page 1/3 -->
-<template id="news">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="left">
-                <v-ons-back-button>戻る</v-ons-back-button>
-            </div>
-            <div class="center">news</div>
-            <div class="right">
-            </div>
-        </v-ons-toolbar>
-
-        <p style="text-align: center">
-            Some news here.
-        </p>
-    </v-ons-page>
-</template>
-
-<!-- side menu page 2/3 -->
-<template id="settings">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="left">
-                <v-ons-back-button>戻る</v-ons-back-button>
-            </div>
-            <div class="center">setting</div>
-            <div class="right">
-            </div>
-        </v-ons-toolbar>
-        <p style="text-align: center">
-            Change the settings.
-        </p>
-    </v-ons-page>
-</template>
-
 <!-- splitter -->
 <template id="splitter">
     <v-ons-splitter>
         <v-ons-splitter-side swipeable
-                             width="60%"
+                             width="65%"
                              collapse=""
                              side="left"
                              :open.sync="menuIsOpen"
         >
             <v-ons-page>
-                <div class="profile-pic">
-                    <img src="images/icon-android/icon-512-512.png">
-                </div>
-
+                <v-ons-row>
+                    <v-ons-col>
+                        <img width="50%" src="images/icon-android/icon-512-512.png">
+                    </v-ons-col>
+                </v-ons-row>
                 <v-ons-list>
-                    <v-ons-list-header>メニュー</v-ons-list-header>
-                    <v-ons-list-item v-for="page in sideMenuPages" :key="page.title"
-                                     tappable
-                                     modifier="chevron"
-                                     @click="loadPage(page.page)"
-                    >
-                        <div class="left">
-                            <v-ons-icon :icon="page.icon"></v-ons-icon>
-                        </div>
-                        <div class="center">{{ page.title }}</div>
-                    </v-ons-list-item>
                     <v-ons-list-header>外部リンク</v-ons-list-header>
                     <v-ons-list-item v-for="link in links" :key="link.title"
                                      tappable
@@ -154,6 +189,9 @@
                             <img class="list-item__thumbnail" :src=link.icon>
                         </div>
                         <div class="center">{{ link.title }}</div>
+                        <div class="right">
+                            <v-ons-icon icon="fa-external-link"></v-ons-icon>
+                        </div>
                     </v-ons-list-item>
                     <v-ons-list-header>情報</v-ons-list-header>
                     <v-ons-list-item v-for="link in otherLinks" :key="link.title"
@@ -165,6 +203,9 @@
                             <img class="list-item__thumbnail" :src=link.icon>
                         </div>
                         <div class="center">{{ link.title }}</div>
+                        <div class="right">
+                            <v-ons-icon icon="fa-external-link"></v-ons-icon>
+                        </div>
                     </v-ons-list-item>
                 </v-ons-list>
             </v-ons-page>
@@ -295,28 +336,6 @@
         }
     };
 
-    const newsPage = {
-        template: '#news',
-        methods: {
-            toggleMenu: function () {
-                this.$store.commit('splitter/toggle')
-            },
-            back: function () {
-                this.$store.commit('navigator/pop')
-            }
-        }
-    };
-
-    const settingsPage = {
-        template: '#settings',
-        methods: {
-            toggleMenu: function () {
-                this.$store.commit('splitter/toggle')
-            }
-        }
-    };
-
-
     ////////////////
     // main
     ////////////////
@@ -329,18 +348,6 @@
         },
         data: function () {
             return {
-                sideMenuPages: [
-                    {
-                        title: 'news',
-                        icon: 'fa-home',
-                        page: newsPage
-                    },
-                    {
-                        title: "settings",
-                        icon: 'fa-home',
-                        page: settingsPage
-                    }
-                ],
                 links: [
                     {
                         title: '今日の献立',
@@ -453,33 +460,11 @@
         -webkit-tap-highlight-color: transparent;
     }
 
-    .menu-image {
-        position: relative;
-    }
-
-    .menu-image p {
-        position: absolute;
-        top: 0;
-        left: 0;
-        margin: 0;
-        color: white;
-        background: lightsalmon;
-        font-size: 35px;
-        line-height: 1;
-        padding: 5px 15px;
-        font-weight: bold;
-    }
-
-    .todays-image {
-        width: 100%;
-    }
-
     .profile-pic {
         width: 100%;
         background-color: #fff;
         border-bottom: 1px solid #DDD;
         color: rgba(0, 0, 0, .56);
-        padding-bottom: 8px;
     }
     .page--material .profile-pic {
         background-color: #f6f6f6;
@@ -490,79 +475,17 @@
         max-width: 50%;
     }
 
-    .pull-hook-spinner {
-        color: #666;
-        transition: transform .25s ease-in-out;
+    .card {
+        padding: 8px;
     }
 
-    .pull-hook-progress {
-        background-color: white;
-        width: 32px;
-        height: 32px;
-        margin: 30px auto 0;
-        border-radius: 100%;
-        position: relative;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        display: inline-block;
-        line-height: 0;
-    }
-
-    .pull-hook-progress .progress-circular {
-        width: 24px;
-        height: 24px;
-        position: absolute;
-        top: 4px;
-        left: 4px;
-    }
-
-    .pull-hook-progress .progress-circular__primary {
-        transition: stroke-dashoffset 0s;
+    ons-row > ons-col > .card {
+        margin: 2px;
+        padding: 2px;
     }
 
     /*カレンダー*/
-    #calendar {
-        width: 100%;
-        height: 90%;
-    }
 
-    #calendar-nav {
-        text-align: center;
-        height: 10%;
-    }
-
-    #calendar-nav span {
-        display: inline-block;
-        width: 300px;
-    }
-
-    #calendar-nav i:hover {
-        cursor: pointer;
-    }
-
-    /* カレンダーのスタイル */
-    .table th, td {
-        text-align: center;
-    }
-
-    #calendar th:first-child {
-        background-color: #FEEEFF;
-    }
-
-    #calendar td:first-child {
-        background-color: #FEEEFF;
-    }
-
-    #calendar th:nth-child(7) {
-        background-color: #DFFFFF
-    }
-
-    #calendar td:nth-child(7) {
-        background-color: #DFFFFF
-    }
-
-    #calendar td:hover {
-        opacity: 0.6;
-    }
 </style>
 
 </body>
