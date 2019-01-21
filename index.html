@@ -158,7 +158,7 @@
                         </div>
                         <div class="center">{{ link.title }}</div>
                     </v-ons-list-item>
-                    <v-ons-list-header>その他</v-ons-list-header>
+                    <v-ons-list-header>情報</v-ons-list-header>
                     <v-ons-list-item v-for="link in otherLinks" :key="link.title"
                                      tappable
                                      modifier="longdivider, tappable"
@@ -439,9 +439,7 @@
                         title: '放射線測定結果',
                         icon: 'images/assets/speedometer.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
-                    }
-                ],
-                otherLinks: [
+                    },
                     {
                         title: '半田市',
                         icon: 'images/assets/handa.png',
@@ -457,7 +455,13 @@
                         icon: 'images/assets/ogrium.png',
                         url: 'https://shinyaoguri.com'
                     }
-
+                ],
+                otherLinks: [
+                    {
+                        title: '著作権情報',
+                        icon: 'images/assets/gdpr.png',
+                        url: 'https://shinyaoguri.com'
+                    }
                 ]
             }
         },
