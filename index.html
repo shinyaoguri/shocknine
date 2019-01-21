@@ -15,7 +15,6 @@
     <link rel="manifest" href="manifest.json">
 
     <!-- favicon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-android/icon-192-192.png">
 
@@ -56,26 +55,31 @@
             </div>
             <div class="center">{{ title }}</div>
             <div class="right">
-                <v-ons-toolbar-button @click="toggleMenu">
+                <v-ons-toolbar-button @click="openCalendar">
                     <v-ons-icon icon="fa-calendar"></v-ons-icon>
                 </v-ons-toolbar-button>
             </div>
 
         </v-ons-toolbar>
 
-        <div class="menu-image">
-            <img class="todays-image" :src="imageSrc">
-            <p>{{ todayStr }}</p>
-        </div>
-        <v-ons-list v-for="item in todaysMenu.data.menu" :key="item.name">
-            <v-ons-list-header>
-                {{item.type}}
-            </v-ons-list-header>
-            <v-ons-list-item>
-                {{item.name}}
-            </v-ons-list-item>
+    </v-ons-page>
+</template>
 
-        </v-ons-list>
+<!-- calendar page -->
+<template id="calendar">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left">
+                <v-ons-back-button>戻る</v-ons-back-button>
+            </div>
+            <div class="center">献立表</div>
+            <div class="right">
+            </div>
+        </v-ons-toolbar>
+
+        <p style="text-align: center">
+            Some news here.
+        </p>
     </v-ons-page>
 </template>
 
@@ -246,94 +250,32 @@
         }
     });
 
-    //TODO tabで軽く実装したものをSplitterに移行する
-
+    ////////////////
+    // main page
+    ////////////////
     const homePage = {
         template: '#home',
         data: function () {
             return {
                 title: '今日の献立',
-                pullhookstate: 'initial',
-                ratio: 0,
-                now: null,
-                imageSrc: this.getTodayMenuImgPath(),
-                dayPath: this.getTodayMenuImgPath(),
-                todayStr: this.getTodayStr(),
-                todaysMenu: {
-                    id: 20180611,
-                    data: {
-                        year: 2018,
-                        month: 6,
-                        date: 11,
-                        day: 1,
-                        menuExist: true,
-                        cal_s: 668,
-                        cal_c: 847,
-                        menu: [
-                            {
-                                type: 'main',
-                                name: 'ごはん'
-                            },
-                            {
-                                type: 'sub',
-                                name: '★はるまき'
-                            },
-                            {
-                                type: 'sub',
-                                name: 'ぶたキムチいため'
-                            },
-                            {
-                                type: 'sub',
-                                name: 'ちゅうかふうたまごスープ'
-                            },
-                            {
-                                type: 'drink',
-                                name: '牛乳'
-                            }
-                        ]
+                menues: [
+                    {
+
+                    },
+                    {
+
                     }
-                }
+                ]
             }
-        },
-        created: function () {
-            this.now = new Date()
-            setInterval(() => {
-                // this.now = new Date()
-                // console.log('hoge')
-            }, 100)
         },
         computed: {
-            today: function () {
-                return this.now.getSeconds()
-            }
         },
         methods: {
-            onPull(ratio) {
-                this.ratio = ratio
-            },
-            onAction(done) {
-                setTimeout(() => {
-                    this.imageSrc = this.getTodayMenuImgPath()
-                    done()
-                }, 1500)
-            },
-            getTodayMenuImgPath: function () {
-                let day = new Date()
-                let dayStr = day.getFullYear() + '' + ('00' + (day.getMonth() + 1)).slice(-2) + '' + ('00' + day.getDate()).slice(-2)
-                //return 'http://hoge.main.jp/handa-lunch-od/' + dayStr + '.jpg'
-                return 'images/assets/noimg.png'
-            },
-            getTodayStr: function () {
-                let day = new Date()
-                let today = (day.getMonth() + 1) + '月' + day.getDate() + '日'
-                return today
-            },
             toggleMenu: function () {
                 this.$store.commit('splitter/toggle')
             },
-            push: function () {
-                //this.$emit('push-page', page2);
-                store.commit('navigator/push', page2)
+            openCalendar: function () {
+                this.$store.commit('navigator/push', calendarPage)
             }
         }
     };
@@ -341,6 +283,18 @@
     ////////////////
     // side menu
     ////////////////
+    const calendarPage = {
+        template: '#calendar',
+        methods: {
+            toggleMenu: function () {
+                this.$store.commit('splitter/toggle')
+            },
+            back: function () {
+                this.$store.commit('navigator/pop')
+            }
+        }
+    };
+
     const newsPage = {
         template: '#news',
         methods: {
@@ -432,7 +386,9 @@
                         title: '放射線測定結果',
                         icon: 'images/assets/speedometer.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
-                    },
+                    }
+                ],
+                otherLinks: [
                     {
                         title: '半田市',
                         icon: 'images/assets/handa.png',
@@ -447,9 +403,7 @@
                         title: '開発者',
                         icon: 'images/assets/ogrium.png',
                         url: 'https://shinyaoguri.com'
-                    }
-                ],
-                otherLinks: [
+                    },
                     {
                         title: '著作権情報',
                         icon: 'images/assets/gdpr.png',
