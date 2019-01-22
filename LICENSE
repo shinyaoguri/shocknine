@@ -23,6 +23,7 @@ SOFTWARE.
 ----
 本アプリケーションは以下のソフトウェア，およびデータ等を使用しています．
 
+## ソフトウェア
 ** Vue **
 Copyright (c) 2013-present, Yuxi (Evan) You
 [vuejs/vue](https://github.com/vuejs/vue) is licensed under the [MIT License](https://github.com/vuejs/vue/blob/dev/LICENSE)
@@ -35,6 +36,8 @@ Copyright (c) 2015-present Evan You
 Copyright 2013-2018 ASIAL CORPORATION
 [OnsenUI/OnsenUI](https://github.com/OnsenUI/OnsenUI) is licensed under the [Apache License 2.0](https://github.com/OnsenUI/OnsenUI/blob/master/LICENSE)
 
+
+## データ
 ** 半田市学校給食メニュー **
 Copyright (c) 2017- [愛知県半田市企画課広報情報担当](http://user.linkdata.org/user/kouhou_handacity/work)
 [半田市学校給食メニュー](http://linkdata.org/work/rdf1s4907i) is licensed under the [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/deed.ja)
@@ -51,7 +54,6 @@ Copyright (c) Handa City. All Rights Reserved.
 - [給食物資の産地](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushoku.html)
 - [学校給食レシピ](http://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyuusyokuresipi1.html)
 
-** 素材画像 from Flaticon.com **
 ** breakfast.png, menu.png, danger.png, farmer.png, whisk.png, speedometer.png **
 Icons made by [Freepik](https://www.freepik.com/) from [www.flaticon.com](https://www.flaticon.com/) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 
@@ -62,5 +64,12 @@ Icons made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [ww
 Icons made by [Wichai.wi](https://www.flaticon.com/authors/Wichai.wi) from [www.flaticon.com](https://www.flaticon.com/) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 
 ** 素材画像 from いらすとや **
-Copyright (c)　[いらすとや](https://www.irasutoya.com/)
+Copyright (c)　[いらすとや](https://www.irasutoya.com/). All Rights Reserved.
 allergy01_kani.png, allergy02_ebi.png, allergy03_tamago.png, allergy04_milk.png, allergy05_peanut.png, allergy06_komugi.png, allergy07_soba.png, allergy08_awabi.png, allergy09_ika.png, allergy10_ikura.png, allergy11_mikan.png, allergy12_cashew.png, allergy13_kiwi.png, allergy14_gyuniku.png, allergy15_kurumi.png, allergy16_goma.png, allergy17_sake.png, allergy18_saba.png, allergy19_daizu.png, allergy20_toriniku.png, allergy21_banana.png, allergy22_butaniku.png, allergy23_matsutake.png, allergy24_momo.png, allergy25_yamaimo.png, allergy26_ringo.png, allergy27_gelatine.png
+
+milk_gyunyu_pack.png, food_gohan_hakumai.png, bread_syokupan.png,
+
+** other images **
+Portions of this image was copied and modified from [いらすとや](https://www.irasutoya.com/)
+noimg.png,
+
