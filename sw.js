@@ -42,6 +42,8 @@ var urlsToCache = [
     "images/assets/menu-category/food_men_chuka.png",
     "images/assets/menu-category/food_men_udon.png",
     "images/assets/menu-category/nan.png",
+    "images/assets/menu-category/school1_syougaku.png",
+    "images/assets/menu-category/school3_chugaku.png",
     "images/assets/menu-icon/breakfast.png",
     "images/assets/menu-icon/danger.png",
     "images/assets/menu-icon/farmer.png",
@@ -70,11 +72,12 @@ const CACHE_KEYS = [
 self.addEventListener('install', event => {
     console.log('Service Worker Installing');
     event.waitUntil(
-        caches.open(CACHE_NAME) // 上記で指定しているキャッシュ名
+        caches.open(CACHE_NAME)
             .then(
                 function(cache){
-                    return cache.addAll(urlsToCache); // 指定したリソースをキャッシュへ追加
+                    // 指定したリソースをキャッシュへ追加
                     // 1つでも失敗したらService Workerのインストールはスキップされる
+                    return cache.addAll(urlsToCache);
                 })
     );
 });

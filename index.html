@@ -44,6 +44,25 @@
 
 <body style="position:fixed;">
 
+
+<!-- dish page -->
+<template id="dish">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left">
+                <v-ons-back-button>戻る</v-ons-back-button>
+            </div>
+            <div class="center">献立表</div>
+            <div class="right">
+            </div>
+        </v-ons-toolbar>
+
+        <p style="text-align: center">
+            Some news here.
+        </p>
+    </v-ons-page>
+</template>
+
 <!-- main page -->
 <template id="home">
     <v-ons-page>
@@ -61,7 +80,7 @@
             </div>
         </v-ons-toolbar>
 
-        <v-ons-card @click="toggleMenu">
+        <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
                     <img class="border_radius" src="https://xrium.xyz/handa-lunch/20190121.jpg" style="width: 100%">
@@ -97,7 +116,7 @@
             </div>
         </v-ons-card>
 
-        <v-ons-card>
+        <v-ons-card @click="loadDish">
             <img width="100%" class="border_radius" src="https://xrium.xyz/handa-lunch/20190122.jpg">
             <v-ons-row>
                 <v-ons-col>
@@ -128,7 +147,7 @@
             </div>
         </v-ons-card>
 
-        <v-ons-card>
+        <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
                     <img class="border_radius" src="images/assets/noimg.png" style="width: 100%">
@@ -161,7 +180,7 @@
             </div>
         </v-ons-card>
 
-        <v-ons-card>
+        <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
                     <img class="border_radius" src="images/assets/noimg.png" style="width: 100%">
@@ -194,7 +213,7 @@
             </div>
         </v-ons-card>
 
-        <v-ons-card>
+        <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
                     <img class="border_radius" src="images/assets/noimg.png" style="width: 100%">
@@ -247,6 +266,7 @@
     </v-ons-page>
 </template>
 
+
 <!-- splitter -->
 <template id="splitter">
     <v-ons-splitter>
@@ -259,7 +279,10 @@
             <v-ons-page>
                 <v-ons-row>
                     <v-ons-col>
-                        <img width="50%" src="images/icon-android/icon-512-512.png">
+                        <img width="100%" src="images/icon-android/icon-512-512.png">
+                    </v-ons-col>
+                    <v-ons-col>
+                        <div class="side-menu-app-title">半田市給食</div>
                     </v-ons-col>
                 </v-ons-row>
                 <v-ons-list>
@@ -400,6 +423,9 @@
             },
             openCalendar: function () {
                 this.$store.commit('navigator/push', calendarPage)
+            },
+            loadDish: function () {
+                this.$store.commit('navigator/push', dishPage)
             }
         }
     };
@@ -419,6 +445,15 @@
         }
     };
 
+
+    ////////////////
+    // dish page
+    ////////////////
+    const dishPage = {
+        template: '#dish',
+        methods: {
+        }
+    };
 
     ////////////////
     // tutorial page
@@ -563,6 +598,12 @@
         max-width: 50%;
     }
 
+    /*side menu*/
+    .side-menu-app-title {
+
+    }
+
+    /*card*/
     .card {
         padding: 8px;
     }
