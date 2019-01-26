@@ -11,33 +11,33 @@
     <meta name="theme-color" content="#5E3B4D">
     <title>shocknine</title>
 
-    <!-- for pwa -->
-    <link rel="manifest" href="manifest.json">
-
     <!-- favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="images/icon-android/icon-192-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icon-android/icon-192x192.png">
 
     <!-- CSS -->
     <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.6/css/onsenui.css">
     <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css">
 
     <!-- JS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
+    <script src="https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js"></script>
+    <script src="https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js"></script>
+    <script src="https://unpkg.com/vuex-persistedstate@2.5.4/dist/vuex-persistedstate.umd.js"></script>
+    <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
 
     <!-- mobile  -->
     <meta name="viewport"
           content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 
+    <!-- android -->
+    <link rel="manifest" href="manifest.json">
+
     <!-- mobile Safari -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="shocknine">
-
-    <!-- ios Icon Image-->
     <link rel="apple-touch-icon" type="image/png" href="images/icon-ios/Icon-60@3x.png">
 
 </head>
@@ -52,9 +52,7 @@
             <div class="left">
                 <v-ons-back-button>戻る</v-ons-back-button>
             </div>
-            <div class="center">献立表</div>
-            <div class="right">
-            </div>
+            <div class="center">月日のメニュー</div>
         </v-ons-toolbar>
 
         <p style="text-align: center">
@@ -80,10 +78,32 @@
             </div>
         </v-ons-toolbar>
 
+        <v-ons-card v-for="menu in week_menu" :key="menu.day">
+            <div class="dish-picture">
+                <img :src=menu.image>
+            </div>
+
+            <div class="staple-dish">
+                <img :src=menu.stapleIcon>
+                <span>{{menu.staplMenu}}</span>
+            </div>
+
+            <div clas="side-dish">
+                <ul>
+                    <li v-for="sd in menu.sideDish" :key="sd.title">
+                        {{sd.title}}
+                    </li>
+                </ul>
+            </div>
+
+            {{ menu.month }}{{ menu.day }}
+        </v-ons-card>
+
+
         <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
-                    <img class="border_radius" src="https://xrium.xyz/handa-lunch/20190121.jpg" style="width: 100%">
+                    <img class="border_radius" src="https://xrium.xyz/handa-lunch-debug/pictures/20190121.jpg" style="width: 100%">
                 </v-ons-col>
                 <v-ons-col>
                     <div class="content">
@@ -117,7 +137,7 @@
         </v-ons-card>
 
         <v-ons-card @click="loadDish">
-            <img width="100%" class="border_radius" src="https://xrium.xyz/handa-lunch/20190122.jpg">
+            <img width="100%" class="border_radius" src="https://xrium.xyz/handa-lunch-debug/pictures/20190122.jpg">
             <v-ons-row>
                 <v-ons-col>
                     <div class="content">
@@ -279,7 +299,7 @@
             <v-ons-page>
                 <v-ons-row>
                     <v-ons-col>
-                        <img width="100%" src="images/icon-android/icon-512-512.png">
+                        <img width="100%" src="images/icon-android/icon-512x512.png">
                     </v-ons-col>
                     <v-ons-col>
                         <div class="side-menu-app-title">半田市給食</div>
@@ -376,7 +396,7 @@
                     options(state, newOptions = {}) {
                         state.options = newOptions
                     }
-                }
+                },
             },
             splitter: {
                 strict: true,
@@ -392,8 +412,15 @@
                             state.isOpen = !state.isOpen
                         }
                     }
+                },
+            },
+            data_table: {
+                state: {
+                },
+                actions: {
                 }
-            }
+            },
+            plugins: [createPersistedState()]
         }
     });
 
@@ -405,15 +432,23 @@
         data: function () {
             return {
                 title: '今週の献立',
-                menues: [
+                week_menu: [
                     {
-
+                        month: '1',
+                        day: '24'
                     },
                     {
-
+                        month: '1',
+                        day: '25'
+                    },
+                    {
+                        month: '1',
+                        day: '26'
                     }
                 ]
             }
+        },
+        created: function () {
         },
         computed: {
         },
@@ -445,7 +480,6 @@
         }
     };
 
-
     ////////////////
     // dish page
     ////////////////
@@ -460,7 +494,6 @@
     ////////////////
     const tutorialPage = {
     };
-
 
     ////////////////
     // main
@@ -608,7 +641,7 @@
         padding: 8px;
     }
 
-    .border_radius {
+    .dish-picture > img {
         border-radius: 10px;
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;

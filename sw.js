@@ -8,8 +8,8 @@ var urlsToCache = [
     "https://unpkg.com/vuex@3.0.1/dist/vuex.js",
     "https://unpkg.com/onsenui@2.10.6/css/onsenui.css",
     "https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css",
-    "images/favicon-32x32.png",
-    "images/favicon-96x96.png",
+    "https://unpkg.com/axios@0.18.0/dist/axios.min.js",
+    "https://unpkg.com/vuex-persistedstate@2.5.4/dist/vuex-persistedstate.umd.js",
     "images/assets/allergie/allergy01_kani.png",
     "images/assets/allergie/allergy02_ebi.png",
     "images/assets/allergie/allergy03_tamago.png",
@@ -54,14 +54,14 @@ var urlsToCache = [
     "images/assets/menu-icon/speedometer.png",
     "images/assets/menu-icon/whisk.png",
     "images/assets/menu-icon/wind.png",
-    "images/assets/menu-icon/wind.png",
-    "images/assets/menu-icon/wind.png",
-    "images/assets/menu-icon/wind.png",
-    "images/assets/icon-android/icon-192-192.png",
-    "images/assets/icon-android/icon-512-512.png",
-    "images/assets/icon-ios/Icon-60@3x.png",
-    "images/assets/original/logo.png",
+    "images/assets/menu-icon/yes-t-logo-front-bk.png",
     "images/assets/noimg.png",
+    "images/icon-android/icon-192x192.png",
+    "images/icon-android/icon-512x512.png",
+    "images/icon-ios/Icon-60@3x.png",
+    "images/original/logo.png",
+    "images/favicon-32x32.png",
+    "images/favicon-96x96.png",
 ];
 
 // 残したいキャッシュのバージョンをこの配列に入れる
@@ -100,10 +100,11 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+    console.log("FETCHING");
     var online = navigator.onLine;
 
     // ファイルパス ~/test.htmlにアクセスすると、このファイル自体は無いがServiceWorkerがResponseを作成して表示してくれる
-    if (event.request.url.indexOf('test.html') != -1) {
+    if (event.request.url.indexOf('test.html') !== -1) {
         return event.respondWith(new Response('任意のURLの内容をここで自由に返却できる'));
     }
 
@@ -130,7 +131,7 @@ self.addEventListener('fetch', event => {
                                 cloneResponse = response.clone();
 
                                 if(response){
-                                    if(response || response.status == 200){
+                                    if(response || response.status === 200){
                                         console.log("正常にリソースを取得");
                                         caches.open(CACHE_NAME)
                                             .then(function(cache)
