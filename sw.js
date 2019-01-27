@@ -55,6 +55,8 @@ var urlsToCache = [
     "images/assets/menu-icon/whisk.png",
     "images/assets/menu-icon/wind.png",
     "images/assets/menu-icon/yes-t-logo-front-bk.png",
+    "images/assets/menu-icon/handa.png",
+    "images/assets/menu-icon/ogrium.png",
     "images/assets/kyusyoku_haizen.png",
     "images/icon-android/icon-192x192.png",
     "images/icon-android/icon-512x512.png",
@@ -105,7 +107,7 @@ self.addEventListener('fetch', event => {
 
     // ファイルパス ~/test.htmlにアクセスすると、このファイル自体は無いがServiceWorkerがResponseを作成して表示してくれる
     if (event.request.url.indexOf('test.html') !== -1) {
-        return event.respondWith(new Response('任意のURLの内容をここで自由に返却できる'));
+        return event.respondWith(new Response('no page'));
     }
 
     if(online){
