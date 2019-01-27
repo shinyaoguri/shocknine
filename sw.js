@@ -1,13 +1,13 @@
-var CACHE_NAME  = "shocknine-cache-v0-01";
+var CACHE_NAME  = "shocknine-cache-v0-02";
 
 var urlsToCache = [
     "/",
     "https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js",
     "https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js",
-    "https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js",
-    "https://unpkg.com/vuex@3.0.1/dist/vuex.js",
     "https://unpkg.com/onsenui@2.10.6/css/onsenui.css",
     "https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css",
+    "https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js",
+    "https://unpkg.com/vuex@3.0.1/dist/vuex.js",
     "https://unpkg.com/axios@0.18.0/dist/axios.min.js",
     "https://unpkg.com/vuex-persistedstate@2.5.4/dist/vuex-persistedstate.umd.js",
     "images/assets/allergie/allergy01_kani.png",
