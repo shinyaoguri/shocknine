@@ -15,6 +15,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-android/icon-192x192.png">
 
+    <!-- android -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- mobile  -->
+    <meta name="viewport"
+          content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+
+    <!-- mobile Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="shocknine">
+    <link rel="apple-touch-icon" type="image/png" href="images/icon-ios/Icon-60@3x.png">
+
     <!-- CSS -->
     <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.6/css/onsenui.css">
     <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css">
@@ -26,25 +39,9 @@
     <script src="https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js"></script>
     <script src="https://unpkg.com/vuex-persistedstate@2.5.4/dist/vuex-persistedstate.umd.js"></script>
     <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
-
-    <!-- mobile  -->
-    <meta name="viewport"
-          content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-
-    <!-- android -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- mobile Safari -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="shocknine">
-    <link rel="apple-touch-icon" type="image/png" href="images/icon-ios/Icon-60@3x.png">
-
 </head>
 
 <body style="position:fixed;">
-
-
 <!-- dish page -->
 <template id="dish">
     <v-ons-page>
@@ -170,7 +167,7 @@
         <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
-                    <img class="border_radius" src="images/assets/noimg.png" style="width: 100%">
+                    <img class="border_radius" src="images/assets/noimg.jpg" style="width: 100%">
                 </v-ons-col>
                 <v-ons-col>
                     <div class="content">
@@ -203,7 +200,7 @@
         <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
-                    <img class="border_radius" src="images/assets/noimg.png" style="width: 100%">
+                    <img class="border_radius" src="images/assets/noimg.jpg" style="width: 100%">
                 </v-ons-col>
                 <v-ons-col>
                     <div class="content">
@@ -236,7 +233,7 @@
         <v-ons-card @click="loadDish">
             <v-ons-row>
                 <v-ons-col width="30%">
-                    <img class="border_radius" src="images/assets/noimg.png" style="width: 100%">
+                    <img class="border_radius" src="images/assets/noimg.jpg" style="width: 100%">
                 </v-ons-col>
                 <v-ons-col>
                     <div class="content">
@@ -302,7 +299,7 @@
                         <img width="100%" src="images/icon-android/icon-512x512.png">
                     </v-ons-col>
                     <v-ons-col>
-                        <div class="side-menu-app-title">半田市給食</div>
+                        <div class="side-menu-app-title">shocknine</div>
                     </v-ons-col>
                 </v-ons-row>
                 <v-ons-list>
