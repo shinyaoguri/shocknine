@@ -55,7 +55,7 @@ var urlsToCache = [
     "images/assets/menu-icon/whisk.png",
     "images/assets/menu-icon/wind.png",
     "images/assets/menu-icon/yes-t-logo-front-bk.png",
-    "images/assets/noimg.png",
+    "images/assets/kyusyoku_haizen.png",
     "images/icon-android/icon-192x192.png",
     "images/icon-android/icon-512x512.png",
     "images/icon-ios/Icon-60@3x.png",
