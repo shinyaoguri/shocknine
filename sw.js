@@ -6,6 +6,7 @@ var urlsToCache = [
     "https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js",
     "https://unpkg.com/onsenui@2.10.6/css/onsenui.css",
     "https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css",
+    "https://unpkg.com/onsenui@2.10.6/css/font_awesome/css/font-awesome.min.css",
     "https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js",
     "https://unpkg.com/vuex@3.0.1/dist/vuex.js",
     "https://unpkg.com/axios@0.18.0/dist/axios.min.js",

@@ -283,6 +283,24 @@
     </v-ons-page>
 </template>
 
+<!-- debug page -->
+<template id="debug">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left">
+                <v-ons-back-button>戻る</v-ons-back-button>
+            </div>
+            <div class="center">Debug</div>
+            <div class="right">
+            </div>
+        </v-ons-toolbar>
+
+        <p>
+            {{ cachedfile }}
+        </p>
+    </v-ons-page>
+</template>
+
 
 <!-- splitter -->
 <template id="splitter">
@@ -331,6 +349,20 @@
                             <v-ons-icon icon="fa-external-link"></v-ons-icon>
                         </div>
                     </v-ons-list-item>
+
+                    <v-ons-list-item tappable
+                                     modifier="longdivider, tappable"
+                                     @click="loadDebug()"
+                    >
+                        <div class="left">
+                            <img class="list-item__thumbnail" :src=debug.icon>
+                        </div>
+                        <div class="center">{{ debug.title }}</div>
+                        <div class="right">
+                            <v-ons-icon icon="fa-external-link"></v-ons-icon>
+                        </div>
+                    </v-ons-list-item>
+
                 </v-ons-list>
             </v-ons-page>
 
@@ -497,6 +529,23 @@
     const tutorialPage = {
     };
 
+    const debugPage = {
+        template: '#debug',
+        data: function () {
+            return {
+
+            }
+        },
+        computed:  {
+            cachedfile: function () {
+                return store.state.navigator.stack
+            }
+        },
+        methods: {
+
+        }
+    };
+
     ////////////////
     // main
     ////////////////
@@ -577,7 +626,11 @@
                         icon: 'images/assets/menu-icon/gdpr.png',
                         url: 'https://raw.githubusercontent.com/shinyaoguri/shocknine/master/LICENSE'
                     }
-                ]
+                ],
+                debug: {
+                    title: 'debug',
+                    icon: 'images/assets/menu-icon/beetle.png',
+                }
             }
         },
         computed: {
@@ -603,6 +656,10 @@
             },
             loadLink: function (url) {
                 window.open(url, '_blank')
+            },
+            loadDebug: function () {
+                store.commit('navigator/push', debugPage)
+                store.commit('splitter/toggle', false)
             }
         }
     });
