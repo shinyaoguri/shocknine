@@ -32,10 +32,6 @@ Copyright (c) 2013-present, Yuxi (Evan) You
 Copyright (c) 2015-present Evan You
 [vuejs/vuex](https://github.com/vuejs/vuex) is licensed under the [MIT License](https://github.com/vuejs/vuex/blob/dev/LICENSE)
 
-** vuex-persistedstate **
-Copyright (c) 2016-2019 Robin van der Vleuten <robin@webstronauts.co>
-[robinvdvleuten/vuex-persistedstate](https://github.com/robinvdvleuten/vuex-persistedstate) is licensed under the [MIT License](https://github.com/robinvdvleuten/vuex-persistedstate/blob/master/LICENSE)
-
 ** axios **
 Copyright (c) 2014-present Matt Zabriskie
 [axios/axios](https://github.com/axios/axios) is licensed under the [MIT License](https://github.com/axios/axios/blob/master/LICENSE)

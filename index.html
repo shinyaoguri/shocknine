@@ -37,8 +37,8 @@
     <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
     <script src="https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js"></script>
     <script src="https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js"></script>
-    <script src="https://unpkg.com/vuex-persistedstate@2.5.4/dist/vuex-persistedstate.umd.js"></script>
     <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-router@3.0.2/dist/vue-router.js"></script>
 </head>
 
 <body style="position:fixed;">
@@ -75,25 +75,92 @@
             </div>
         </v-ons-toolbar>
 
-        <v-ons-card v-for="menu in week_menu" :key="menu.day">
+        <v-ons-list>
+            <v-ons-list-item v-for="menu in week_menu" :key="menu.day"
+                             modifier="longdivider, tappable"
+                             class="dayMenu"
+                             v-bind:class="{ 'today-menu': menu.isToday }"
+            >
+                <div class="daytag">
+                    {{menu.year}}年{{menu.month}}月{{menu.day}}日
+                </div>
+
+                <div class="dish-picture">
+                    <img :src=menu.image>
+                </div>
+
+                <div class="staple-dish">
+                    <img :src=menu.stapleIcon>
+                    <span>{{menu.stapleMenu}}</span>
+                </div>
+
+                <div clas="side-dish">
+                    <ul>
+                        <li v-for="sd in menu.sideDish" :key="sd.title">
+                            {{ sd }}
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-cal-area">
+                    <div class="primary-school">
+                        <img src="images/assets/menu-category/school1_syougaku.png">
+                        <div class="menu-cal">
+                            {{ menu.primaryCal }}
+                        </div>
+                    </div>
+
+                    <div class="junior-high-school">
+                        <img src="images/assets/menu-category/school3_chugaku.png">
+                        <div class="menu-cal">
+                            {{ menu.juniorHighCal }}
+                        </div>
+                    </div>
+                </div>
+            </v-ons-list-item>
+        </v-ons-list>
+
+        <v-ons-card v-for="menu in week_menu" :key="menu.day"
+                    modifier="longdivider, tappable"
+                    class="dayMenu"
+                    v-bind:class="{ 'today-menu': menu.isToday }"
+        >
+            <div class="daytag">
+                {{menu.year}}年{{menu.month}}月{{menu.day}}日
+            </div>
+
             <div class="dish-picture">
                 <img :src=menu.image>
             </div>
 
             <div class="staple-dish">
                 <img :src=menu.stapleIcon>
-                <span>{{menu.staplMenu}}</span>
+                <span>{{menu.stapleMenu}}</span>
             </div>
 
             <div clas="side-dish">
                 <ul>
                     <li v-for="sd in menu.sideDish" :key="sd.title">
-                        {{sd.title}}
+                        {{ sd }}
                     </li>
                 </ul>
             </div>
 
-            {{ menu.month }}{{ menu.day }}
+            <div class="menu-cal-area">
+                <div class="primary-school">
+                    <img src="images/assets/menu-category/school1_syougaku.png">
+                    <div class="menu-cal">
+                        {{ menu.primaryCal }}
+                    </div>
+                </div>
+
+                <div class="junior-high-school">
+                    <img src="images/assets/menu-category/school3_chugaku.png">
+                    <div class="menu-cal">
+                        {{ menu.juniorHighCal }}
+                    </div>
+                </div>
+            </div>
         </v-ons-card>
 
 
@@ -283,25 +350,6 @@
     </v-ons-page>
 </template>
 
-<!-- debug page -->
-<template id="debug">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="left">
-                <v-ons-back-button>戻る</v-ons-back-button>
-            </div>
-            <div class="center">Debug</div>
-            <div class="right">
-            </div>
-        </v-ons-toolbar>
-
-        <p>
-            {{ cachedfile }}
-        </p>
-    </v-ons-page>
-</template>
-
-
 <!-- splitter -->
 <template id="splitter">
     <v-ons-splitter>
@@ -349,20 +397,6 @@
                             <v-ons-icon icon="fa-external-link"></v-ons-icon>
                         </div>
                     </v-ons-list-item>
-
-                    <v-ons-list-item tappable
-                                     modifier="longdivider, tappable"
-                                     @click="loadDebug()"
-                    >
-                        <div class="left">
-                            <img class="list-item__thumbnail" :src=debug.icon>
-                        </div>
-                        <div class="center">{{ debug.title }}</div>
-                        <div class="right">
-                            <v-ons-icon icon="fa-external-link"></v-ons-icon>
-                        </div>
-                    </v-ons-list-item>
-
                 </v-ons-list>
             </v-ons-page>
 
@@ -385,11 +419,14 @@
     ////////////////
     window.addEventListener('load', function () {
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register("sw.js")
-                .then(function (registration) {
-                    console.log("serviceWorker registed.");
-                }).catch(function (error) {
-                console.warn("serviceWorker error.", error);
+            navigator.serviceWorker.register("sw.js").then(function (registration) {
+                console.log("serviceWorker registed.")
+                registration.onupdatefound = () => {
+                    console.log('sw.jsのアップデートがあります！')
+                    registration.update()
+                }
+            }).catch(function (error) {
+                console.warn("serviceWorker error.", error)
             });
         }
     });
@@ -453,8 +490,7 @@
 
                     }
                 }
-            },
-            plugins: [createPersistedState()]
+            }
         }
     });
 
@@ -468,17 +504,92 @@
                 title: '今週の献立',
                 week_menu: [
                     {
+                        year: '2019',
                         month: '1',
-                        day: '24'
+                        day: '28',
+                        isToday: true,
+                        image: 'https://xrium.xyz/handa-lunch-debug/pictures/20190121.jpg',
+                        stapleMenu: 'ごはん',
+                        stapleIcon: 'images/assets/menu-category/food_gohan_hakumai.png',
+                        sideDish: [
+                            '★ししゃもフライのなんばんづけ（２び）',
+                            'はくさいとキャベツとわかめのあえもの',
+                            'なまあげのうまに',
+                            '牛乳'
+                        ],
+                        primaryCal: '644',
+                        juniorHighCal: '795',
+
                     },
                     {
+                        year: '2019',
                         month: '1',
-                        day: '25'
+                        day: '29',
+                        isToday: false,
+                        image: 'images/assets/kyusyoku_haizen.png',
+                        stapleMenu: 'むぎごはん',
+                        stapleIcon: 'images/assets/menu-category/food_gohan_hakumai.png',
+                        sideDish: [
+                            'カレー',
+                            'とりにくのハーブやき',
+                            'ほうれんそうとコーンのサラダ',
+                            '牛乳'
+                        ],
+                        primaryCal: '649',
+                        juniorHighCal: '814',
+
                     },
                     {
+                        year: '2019',
                         month: '1',
-                        day: '26'
-                    }
+                        day: '31',
+                        isToday: false,
+                        image: 'images/assets/kyusyoku_haizen.png',
+                        stapleMenu: 'ごはん',
+                        stapleIcon: 'images/assets/menu-category/food_gohan_hakumai.png',
+                        sideDish: [
+                            '★いかフライ',
+                            'おやこに',
+                            'きりぼしだいこんのあまずあえ',
+                            '牛乳'
+                        ],
+                        primaryCal: '656',
+                        juniorHighCal: '819',
+
+                    },
+                    {
+                        year: '2019',
+                        month: '1',
+                        day: '30',
+                        isToday: false,
+                        image: 'images/assets/kyusyoku_haizen.png',
+                        stapleMenu: 'ミルクロールパン',
+                        stapleIcon: 'images/assets/menu-category/bread_syokupan.png',
+                        sideDish: [
+                            '★ハンバーグのケチャップソース',
+                            'やさいとウインナーのポトフ',
+                            'おいもサラダ',
+                            'マヨネーズ',
+                            '牛乳'
+                        ],
+                        primaryCal: '684',
+                        juniorHighCal: '864',
+
+                    },
+                    {
+                        year: '',
+                        month: '',
+                        day: '',
+                        isToday: false,
+                        image: '',
+                        stapleMenu: '',
+                        stapleIcon: '',
+                        sideDish: [
+                        ],
+                        primaryCal: '',
+                        juniorHighCal: '',
+
+                    },
                 ]
             }
         },
@@ -527,23 +638,6 @@
     // tutorial page
     ////////////////
     const tutorialPage = {
-    };
-
-    const debugPage = {
-        template: '#debug',
-        data: function () {
-            return {
-
-            }
-        },
-        computed:  {
-            cachedfile: function () {
-                return store.state.navigator.stack
-            }
-        },
-        methods: {
-
-        }
     };
 
     ////////////////
@@ -626,11 +720,7 @@
                         icon: 'images/assets/menu-icon/gdpr.png',
                         url: 'https://raw.githubusercontent.com/shinyaoguri/shocknine/master/LICENSE'
                     }
-                ],
-                debug: {
-                    title: 'debug',
-                    icon: 'images/assets/menu-icon/beetle.png',
-                }
+                ]
             }
         },
         computed: {
@@ -656,10 +746,6 @@
             },
             loadLink: function (url) {
                 window.open(url, '_blank')
-            },
-            loadDebug: function () {
-                store.commit('navigator/push', debugPage)
-                store.commit('splitter/toggle', false)
             }
         }
     });
