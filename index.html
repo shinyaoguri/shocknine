@@ -42,21 +42,6 @@
 </head>
 
 <body style="position:fixed;">
-<!-- dish page -->
-<template id="dish">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="left">
-                <v-ons-back-button>戻る</v-ons-back-button>
-            </div>
-            <div class="center">月日のメニュー</div>
-        </v-ons-toolbar>
-
-        <p style="text-align: center">
-            Some news here.
-        </p>
-    </v-ons-page>
-</template>
 
 <!-- main page -->
 <template id="home">
@@ -67,286 +52,29 @@
                     <v-ons-icon icon="fa-bars"></v-ons-icon>
                 </v-ons-toolbar-button>
             </div>
-            <div class="center">{{ title }}</div>
-            <div class="right">
-                <v-ons-toolbar-button @click="openCalendar">
-                    <v-ons-icon icon="fa-calendar"></v-ons-icon>
-                </v-ons-toolbar-button>
+            <div class="center">
+                <v-ons-icon icon="fa-shield"></v-ons-icon>
+                shocknine{{ $route.params.request }}
             </div>
-        </v-ons-toolbar>
-
-        <v-ons-list>
-            <v-ons-list-item v-for="menu in week_menu" :key="menu.day"
-                             modifier="longdivider, tappable"
-                             class="dayMenu"
-                             v-bind:class="{ 'today-menu': menu.isToday }"
-            >
-                <div class="daytag">
-                    {{menu.year}}年{{menu.month}}月{{menu.day}}日
-                </div>
-
-                <div class="dish-picture">
-                    <img :src=menu.image>
-                </div>
-
-                <div class="staple-dish">
-                    <img :src=menu.stapleIcon>
-                    <span>{{menu.stapleMenu}}</span>
-                </div>
-
-                <div clas="side-dish">
-                    <ul>
-                        <li v-for="sd in menu.sideDish" :key="sd.title">
-                            {{ sd }}
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="menu-cal-area">
-                    <div class="primary-school">
-                        <img src="images/assets/menu-category/school1_syougaku.png">
-                        <div class="menu-cal">
-                            {{ menu.primaryCal }}
-                        </div>
-                    </div>
-
-                    <div class="junior-high-school">
-                        <img src="images/assets/menu-category/school3_chugaku.png">
-                        <div class="menu-cal">
-                            {{ menu.juniorHighCal }}
-                        </div>
-                    </div>
-                </div>
-            </v-ons-list-item>
-        </v-ons-list>
-
-        <v-ons-card v-for="menu in week_menu" :key="menu.day"
-                    modifier="longdivider, tappable"
-                    class="dayMenu"
-                    v-bind:class="{ 'today-menu': menu.isToday }"
-        >
-            <div class="daytag">
-                {{menu.year}}年{{menu.month}}月{{menu.day}}日
-            </div>
-
-            <div class="dish-picture">
-                <img :src=menu.image>
-            </div>
-
-            <div class="staple-dish">
-                <img :src=menu.stapleIcon>
-                <span>{{menu.stapleMenu}}</span>
-            </div>
-
-            <div clas="side-dish">
-                <ul>
-                    <li v-for="sd in menu.sideDish" :key="sd.title">
-                        {{ sd }}
-                    </li>
-                </ul>
-            </div>
-
-            <div class="menu-cal-area">
-                <div class="primary-school">
-                    <img src="images/assets/menu-category/school1_syougaku.png">
-                    <div class="menu-cal">
-                        {{ menu.primaryCal }}
-                    </div>
-                </div>
-
-                <div class="junior-high-school">
-                    <img src="images/assets/menu-category/school3_chugaku.png">
-                    <div class="menu-cal">
-                        {{ menu.juniorHighCal }}
-                    </div>
-                </div>
-            </div>
-        </v-ons-card>
-
-
-        <v-ons-card @click="loadDish">
-            <v-ons-row>
-                <v-ons-col width="30%">
-                    <img class="border_radius" src="https://xrium.xyz/handa-lunch-debug/pictures/20190121.jpg" style="width: 100%">
-                </v-ons-col>
-                <v-ons-col>
-                    <div class="content">
-                        <div>
-                            <img style="width: 20px" src="images/assets/menu-category/food_gohan_hakumai.png">
-                            <span>ごはん</span>
-                        </div>
-                        <div>
-                            <span>鶏めしの具</span>
-                        </div>
-                        <div>
-                            <span>さんまのみぞれ煮</span>
-                        </div>
-                    </div>
-                </v-ons-col>
-                <v-ons-col>
-                    <div>
-                        <span>沢煮椀</span>
-                    </div>
-                    <div>
-                        <span>★ういろう</span>
-                    </div>
-                    <div>
-                        <span>牛乳</span>
-                    </div>
-                </v-ons-col>
-            </v-ons-row>
-            <div>
-                632,788
-            </div>
-        </v-ons-card>
-
-        <v-ons-card @click="loadDish">
-            <img width="100%" class="border_radius" src="https://xrium.xyz/handa-lunch-debug/pictures/20190122.jpg">
-            <v-ons-row>
-                <v-ons-col>
-                    <div class="content">
-                        <div>
-                            <img style="width: 20px" src="images/assets/menu-category/bread_syokupan.png">
-                            <span>愛知の米粉入りパン</span>
-                        </div>
-                        <div>
-                            <span>ハムステーキ</span>
-                        </div>
-                        <div>
-                            <span>愛知の冬野菜入り豆乳シチュー</span>
-                        </div>
-                    </div>
-                </v-ons-col>
-                <v-ons-col>
-                    <div>
-                        <span>みかん</span>
-                    </div>
-                    <div>
-                        <span>牛乳</span>
-                    </div>
-                </v-ons-col>
-            </v-ons-row>
-            <div>
-                624,719
-            </div>
-        </v-ons-card>
-
-        <v-ons-card @click="loadDish">
-            <v-ons-row>
-                <v-ons-col width="30%">
-                    <img class="border_radius" src="images/assets/kyusyoku_haizen.png" style="width: 100%">
-                </v-ons-col>
-                <v-ons-col>
-                    <div class="content">
-                        <div>
-                            <img style="width: 20px" src="images/assets/menu-category/food_gohan_hakumai.png">
-                            <span>ごはん</span>
-                        </div>
-                        <div>
-                            <span>さばのしおやき</span>
-                        </div>
-                        <div>
-                            <span>みそおでん</span>
-                        </div>
-                    </div>
-                </v-ons-col>
-                <v-ons-col>
-                    <div>
-                        <span>ほうれんそうとはくさいのごまあえ</span>
-                    </div>
-                    <div>
-                        <span>牛乳</span>
-                    </div>
-                </v-ons-col>
-            </v-ons-row>
-            <div>
-                675,845
-            </div>
-        </v-ons-card>
-
-        <v-ons-card @click="loadDish">
-            <v-ons-row>
-                <v-ons-col width="30%">
-                    <img class="border_radius" src="images/assets/kyusyoku_haizen.png" style="width: 100%">
-                </v-ons-col>
-                <v-ons-col>
-                    <div class="content">
-                        <div>
-                            <img style="width: 20px" src="images/assets/menu-category/food_men_udon.png">
-                            <span>きしめん</span>
-                        </div>
-                        <div>
-                            <span>わふうじる</span>
-                        </div>
-                        <div>
-                            <span>★とりにくとレバーのてばさきソースふう</span>
-                        </div>
-                    </div>
-                </v-ons-col>
-                <v-ons-col>
-                    <div>
-                        <span>★あいちのみかんゼリーポンチ</span>
-                    </div>
-                    <div>
-                        <span>牛乳</span>
-                    </div>
-                </v-ons-col>
-            </v-ons-row>
-            <div>
-                746,879
-            </div>
-        </v-ons-card>
-
-        <v-ons-card @click="loadDish">
-            <v-ons-row>
-                <v-ons-col width="30%">
-                    <img class="border_radius" src="images/assets/kyusyoku_haizen.png" style="width: 100%">
-                </v-ons-col>
-                <v-ons-col>
-                    <div class="content">
-                        <div>
-                            <img style="width: 20px" src="images/assets/menu-category/food_gohan_hakumai.png">
-                            <span>ごはん</span>
-                        </div>
-                        <div>
-                            <span>★とうふハンバーグのみそかけ</span>
-                        </div>
-                        <div>
-                            <span>しらすとこまつなのあまずあえ</span>
-                        </div>
-                    </div>
-                </v-ons-col>
-                <v-ons-col>
-                    <div>
-                        <span>ごんのたまごのかきたまじる</span>
-                    </div>
-                    <div>
-                        <span>牛乳</span>
-                    </div>
-                </v-ons-col>
-            </v-ons-row>
-            <div>
-                555,703
-            </div>
-        </v-ons-card>
-    </v-ons-page>
-</template>
-
-<!-- calendar page -->
-<template id="calendar">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="left">
-                <v-ons-back-button>戻る</v-ons-back-button>
-            </div>
-            <div class="center">献立表</div>
             <div class="right">
             </div>
         </v-ons-toolbar>
 
-        <p style="text-align: center">
-            Some news here.
-        </p>
+
+        <main class="main-container">
+            <div class="chat-timeline">
+                <balloon
+                        v-for="chat in chatLogs"
+                        :speaker="chat.speaker"
+                        :name="chat.name"
+                        :message="chat.message">
+                </balloon>
+            </div>
+            <chat-form
+                    @submit-message="submit"
+                    apply-event="submit-message">
+            </chat-form>
+        </main>
     </v-ons-page>
 </template>
 
@@ -364,9 +92,6 @@
                     <v-ons-col>
                         <img width="100%" src="images/icon-android/icon-512x512.png">
                     </v-ons-col>
-                    <v-ons-col>
-                        <div class="side-menu-app-title">shocknine</div>
-                    </v-ons-col>
                 </v-ons-row>
                 <v-ons-list>
                     <v-ons-list-header>外部リンク</v-ons-list-header>
@@ -383,37 +108,100 @@
                             <v-ons-icon icon="fa-external-link"></v-ons-icon>
                         </div>
                     </v-ons-list-item>
-                    <v-ons-list-header>情報</v-ons-list-header>
-                    <v-ons-list-item v-for="link in otherLinks" :key="link.title"
-                                     tappable
-                                     modifier="longdivider, tappable"
-                                     @click="loadLink(link.url)"
-                    >
-                        <div class="left">
-                            <img class="list-item__thumbnail" :src=link.icon>
-                        </div>
-                        <div class="center">{{ link.title }}</div>
-                        <div class="right">
-                            <v-ons-icon icon="fa-external-link"></v-ons-icon>
-                        </div>
-                    </v-ons-list-item>
                 </v-ons-list>
             </v-ons-page>
-
         </v-ons-splitter-side>
 
         <v-ons-splitter-content>
             <v-ons-navigator :page-stack="pageStack"
-                             :pop-page="storePop"
+                             :pop-page="goBack"
             ></v-ons-navigator>
         </v-ons-splitter-content>
     </v-ons-splitter>
+</template>
+
+<template id="notfound">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left" tappable @click="goHome()">
+                <div style="padding-left: 10px">
+                    <v-ons-icon icon="fa-chevron-left"
+                                size="20px"
+                    ></v-ons-icon>
+                </div>
+            </div>
+            <div class="center">{{$options.name}}</div>
+        </v-ons-toolbar>
+
+        404 page not found
+    </v-ons-page>
+</template>
+
+<template id="template">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left">
+                <v-ons-back-button>Back</v-ons-back-button>
+            </div>
+            <div class="center">{{$options.name}}</div>
+        </v-ons-toolbar>
+
+        <br>
+        <div>User {{ $route.params.request }}</div>
+        <div class="links">
+            <router-link :to="{name: 'Home'}">
+                Go Home
+            </router-link>
+            <ol>
+                <li>
+                    <router-link :to="{name: 'Child-1'}">
+                        Child-1
+                    </router-link>
+                    <ol>
+                        <li>
+                            <router-link :to="{name: 'Child-1-1'}">
+                                Child-1-1
+                            </router-link>
+                            <ol>
+                                <li>
+                                    <router-link :to="{name: 'Child-1-1-1'}">
+                                        Child-1-1-1
+                                    </router-link>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            <router-link :to="{name: 'Child-1-2'}">
+                                Child-1-2
+                            </router-link>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <router-link :to="{name: 'Child-2'}">
+                        Child-2
+                        <ol>
+                            <li>
+                                <router-link :to="{name: 'Child-2-1'}">
+                                    Child-1-2
+                                </router-link>
+                            </li>
+                        </ol>
+                    </router-link>
+                </li>
+            </ol>
+        </div>
+    </v-ons-page>
 </template>
 
 <!-- app -->
 <div id="app"></div>
 
 <script>
+
+    Vue.use(Vuex)
+    Vue.use(VueRouter)
+
     ////////////////
     // Service Worker
     ////////////////
@@ -483,8 +271,7 @@
             data_table: {
                 strict: true,
                 namespaved: true,
-                state: {
-                },
+                state: {},
                 actions: {
                     async getCsv() {
 
@@ -494,6 +281,69 @@
         }
     });
 
+    const templatePage = {
+        template: '#template',
+    }
+
+    const notFoundPage = {
+        template: '#notfound',
+        methods: {
+            goHome() {
+                this.$router.push({name: 'Home'})
+            }
+        }
+    }
+
+    const Balloon = {
+        template:
+            `<div class="conversation-balloon" :class="speaker">
+                <div class="avatar">
+                    <img src="images/assets/menu-icon/breakfast.png">
+                </div>
+                <p class="message">{{ message }}</p>
+            </div>`,
+        props: {
+            speaker: {
+                type: String,
+                required: true,
+                validator: value => {
+                    return ['my', 'other'].includes(value);
+                }
+            },
+            message: {
+                type: String,
+                required: true
+            }
+        }
+    };
+
+    const ChatForm = {
+        template:
+            `<div class="chat-form">
+                <div class="form-container">
+                    <input type="text" class="message" v-model="message">
+                    <button class="submit" @click="submit">送信</button>
+                </div>
+            </div>`,
+        props: {
+            applyEvent: {
+                type: String,
+                required: true
+            }
+        },
+        data () {
+            return {
+                message: ''
+            }
+        },
+        methods: {
+            submit () {
+                this.$emit(this.applyEvent, this.message)
+                this.message = '';
+            }
+        }
+    };
+
     ////////////////
     // home page
     ////////////////
@@ -501,155 +351,91 @@
         template: '#home',
         data: function () {
             return {
-                title: '今週の献立',
-                week_menu: [
-                    {
-                        year: '2019',
-                        month: '1',
-                        day: '28',
-                        isToday: true,
-                        image: 'https://xrium.xyz/handa-lunch-debug/pictures/20190121.jpg',
-                        stapleMenu: 'ごはん',
-                        stapleIcon: 'images/assets/menu-category/food_gohan_hakumai.png',
-                        sideDish: [
-                            '★ししゃもフライのなんばんづけ（２び）',
-                            'はくさいとキャベツとわかめのあえもの',
-                            'なまあげのうまに',
-                            '牛乳'
-                        ],
-                        primaryCal: '644',
-                        juniorHighCal: '795',
-
-                    },
-                    {
-                        year: '2019',
-                        month: '1',
-                        day: '29',
-                        isToday: false,
-                        image: 'images/assets/kyusyoku_haizen.png',
-                        stapleMenu: 'むぎごはん',
-                        stapleIcon: 'images/assets/menu-category/food_gohan_hakumai.png',
-                        sideDish: [
-                            'カレー',
-                            'とりにくのハーブやき',
-                            'ほうれんそうとコーンのサラダ',
-                            '牛乳'
-                        ],
-                        primaryCal: '649',
-                        juniorHighCal: '814',
-
-                    },
-                    {
-                        year: '2019',
-                        month: '1',
-                        day: '31',
-                        isToday: false,
-                        image: 'images/assets/kyusyoku_haizen.png',
-                        stapleMenu: 'ごはん',
-                        stapleIcon: 'images/assets/menu-category/food_gohan_hakumai.png',
-                        sideDish: [
-                            '★いかフライ',
-                            'おやこに',
-                            'きりぼしだいこんのあまずあえ',
-                            '牛乳'
-                        ],
-                        primaryCal: '656',
-                        juniorHighCal: '819',
-
-                    },
-                    {
-                        year: '2019',
-                        month: '1',
-                        day: '30',
-                        isToday: false,
-                        image: 'images/assets/kyusyoku_haizen.png',
-                        stapleMenu: 'ミルクロールパン',
-                        stapleIcon: 'images/assets/menu-category/bread_syokupan.png',
-                        sideDish: [
-                            '★ハンバーグのケチャップソース',
-                            'やさいとウインナーのポトフ',
-                            'おいもサラダ',
-                            'マヨネーズ',
-                            '牛乳'
-                        ],
-                        primaryCal: '684',
-                        juniorHighCal: '864',
-
-                    },
-                    {
-                        year: '',
-                        month: '',
-                        day: '',
-                        isToday: false,
-                        image: '',
-                        stapleMenu: '',
-                        stapleIcon: '',
-                        sideDish: [
-                        ],
-                        primaryCal: '',
-                        juniorHighCal: '',
-
-                    },
+                chatLogs: [
+                    { speaker: 'my', message: 'hello'.repeat(10) },
+                    { speaker: 'other', message: 'hello world' }
                 ]
             }
         },
-        created: function () {
-        },
-        computed: {
-        },
         methods: {
             toggleMenu: function () {
                 this.$store.commit('splitter/toggle')
             },
-            openCalendar: function () {
-                this.$store.commit('navigator/push', calendarPage)
+            submit (value) {
+                this.chatLogs.push({
+                    speaker: 'my',
+                    message: value
+                });
+
+                this.botSubmit();
+                this.scrollDown();
             },
-            loadDish: function () {
-                this.$store.commit('navigator/push', dishPage)
+            botSubmit () {
+                setTimeout(() => {
+                    this.chatLogs.push({
+                        speaker: 'other',
+                        message: 'hello world'
+                    });
+
+                    this.scrollDown();
+                }, 1000);
+            },
+            scrollDown () {
+                const target = this.$el.querySelector('.chat-timeline');
+                setTimeout(() => {
+                    const height = target.scrollHeight - target.offsetHeight;
+                    target.scrollTop += 10;
+
+                    if (height <= target.scrollTop) {
+                        return;
+                    } else {
+                        this.scrollDown();
+                    }
+                }, 0);
             }
-        }
+        },
+        components: {
+            balloon: Balloon,
+            chatForm: ChatForm
+        },
     };
 
-    ////////////////
-    // calendar page
-    ////////////////
-    const calendarPage = {
-        template: '#calendar',
-        methods: {
-            toggleMenu: function () {
-                this.$store.commit('splitter/toggle')
-            },
-            back: function () {
-                this.$store.commit('navigator/pop')
-            }
-        }
-    };
-
-    ////////////////
-    // dish page
-    ////////////////
-    const dishPage = {
-        template: '#dish',
-        methods: {
-        }
-    };
 
     ////////////////
     // tutorial page
     ////////////////
-    const tutorialPage = {
-    };
+    const tutorialPage = {};
+
+    const router = new VueRouter({
+        routes: [
+            {
+                path: '/',
+                name: 'Home',
+                component: {name: 'home', extends: homePage},
+                children: [
+                    {
+                        path: ':request',
+                        name: 'request',
+                        component: {name: 'request', extends: homePage},
+                    }
+                ]
+            },
+            {
+                path: '*',
+                name: '404',
+                component: {name: 'notfound', extends: notFoundPage},
+            }
+        ]
+    })
 
     ////////////////
     // main
     ////////////////
     new Vue({
         el: '#app',
+        router: router,
         template: "#splitter",
         store: store,
-        beforeCreate() {
-            store.commit('navigator/push', homePage)
-        },
         data: function () {
             return {
                 links: [
@@ -697,9 +483,7 @@
                         title: '放射線測定結果',
                         icon: 'images/assets/menu-icon/speedometer.png',
                         url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
-                    }
-                ],
-                otherLinks: [
+                    },
                     {
                         title: '半田市',
                         icon: 'images/assets/menu-icon/handa.png',
@@ -737,16 +521,20 @@
             }
         },
         methods: {
-            storePop: function () {
-                store.commit('navigator/pop')
-            },
-            loadPage: function (newPage) {
-                store.commit('navigator/push', newPage)
-                store.commit('splitter/toggle', false)
-            },
             loadLink: function (url) {
                 window.open(url, '_blank')
+            },
+            goBack() {
+                this.$router.push({name: this.$route.matched[this.$route.matched.length - 2].name})
+            },
+            goToPath(path) {
+                this.$router.push({path: path})
             }
+        },
+        created() {
+            const mapRouteStack = route => store.state.navigator.stack = route.matched.map(m => m.components.default)
+            mapRouteStack(this.$route)
+            router.beforeEach((to, from, next) => mapRouteStack(to) && next())
         }
     });
 
@@ -767,6 +555,7 @@
         border-bottom: 1px solid #DDD;
         color: rgba(0, 0, 0, .56);
     }
+
     .page--material .profile-pic {
         background-color: #f6f6f6;
     }
@@ -801,7 +590,138 @@
         padding: 2px;
     }
 
-    /*カレンダー*/
+    /**/
+    .conversation-balloon.my {
+        text-align: right;
+    }
+    .conversation-balloon.my > .avatar {
+        float: right;
+    }
+    .conversation-balloon.my > .message {
+        margin-right: 20px;
+        background-color: #85FF49;
+        text-align: left;
+    }
+    .conversation-balloon.my > .message::before {
+        right: -20px;
+        transform: rotate(-25deg);
+        border-left: 18px solid #85FF49;
+    }
+    .conversation-balloon.other {
+        text-align: left;
+    }
+    .conversation-balloon.other > .avatar {
+        float: left;
+    }
+    .conversation-balloon.other > .message {
+        margin-left: 0px;
+        background-color: #FFFFFF;
+    }
+    .conversation-balloon.other > .message::before {
+        left: -20px;
+        transform: rotate(25deg);
+        border-right: 18px solid #FFFFFF;
+    }
+    .conversation-balloon > .avatar {
+        width: 80px;
+    }
+    .conversation-balloon > .avatar::after {
+        clear: both;
+    }
+    .conversation-balloon > .avatar > img {
+        display: block;
+        margin: 0 auto;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-bottom: 5px;
+    }
+    .conversation-balloon > .avatar > .name {
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 0.8rem;
+        word-wrap: break-word;
+    }
+    .conversation-balloon > .message {
+        display: inline-block;
+        max-width: 280px;
+        padding: 10px 30px;
+        border-radius: 30px;
+        font-size: 1.3rem;
+        min-height: 30px;
+        word-wrap: break-word;
+        position: relative;
+    }
+    .conversation-balloon > .message::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 5px;
+        border: 8px solid transparent;
+    }
+
+    button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        padding: 0;
+        appearance: none;
+    }
+
+    .form-container {
+        position: relative;
+        height: 40px;
+    }
+    .form-container > .message {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 80px;
+        width: 100%;
+        font-size: 1.3rem;
+        padding: 0px;
+        border: 0px;
+    }
+    .form-container > .submit {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 80px;
+        text-align: center;
+        background-color: #4F83E1;
+        color: white;
+        font-size: 1.6rem;
+    }
+
+    button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        padding: 0;
+        appearance: none;
+    }
+
+    /* timeline */
+    .chat-timeline {
+        position: fixed;
+        top: 0;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        min-width: 480px;
+        background-color: #88A4D4;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .chat-timeline > .conversation-balloon {
+        margin-bottom: 30px;
+    }
 
 </style>
 
