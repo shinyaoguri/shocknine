@@ -78,6 +78,25 @@
     </v-ons-page>
 </template>
 
+<template id="baloon">
+    <div class="conversation-balloon" :class="speaker">
+        <div class="avatar" v-if="speaker === 'other'">
+            <img src="images/icon-ios/Icon-60@3x.png">
+        </div>
+        <p class="message">{{ message }}</p>
+    </div>
+</div>
+</template>
+
+<template id="chatform">
+    <div class="chat-form">
+        <div class="form-container">
+            <input type="text" class="message" v-model="message">
+            <button class="submit" @click="submit">送信</button>
+        </div>
+    </div>
+</template>
+
 <!-- splitter -->
 <template id="splitter">
     <v-ons-splitter>
@@ -120,80 +139,6 @@
     </v-ons-splitter>
 </template>
 
-<template id="notfound">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="left" tappable @click="goHome()">
-                <div style="padding-left: 10px">
-                    <v-ons-icon icon="fa-chevron-left"
-                                size="20px"
-                    ></v-ons-icon>
-                </div>
-            </div>
-            <div class="center">{{$options.name}}</div>
-        </v-ons-toolbar>
-
-        404 page not found
-    </v-ons-page>
-</template>
-
-<template id="template">
-    <v-ons-page>
-        <v-ons-toolbar>
-            <div class="left">
-                <v-ons-back-button>Back</v-ons-back-button>
-            </div>
-            <div class="center">{{$options.name}}</div>
-        </v-ons-toolbar>
-
-        <br>
-        <div>User {{ $route.params.request }}</div>
-        <div class="links">
-            <router-link :to="{name: 'Home'}">
-                Go Home
-            </router-link>
-            <ol>
-                <li>
-                    <router-link :to="{name: 'Child-1'}">
-                        Child-1
-                    </router-link>
-                    <ol>
-                        <li>
-                            <router-link :to="{name: 'Child-1-1'}">
-                                Child-1-1
-                            </router-link>
-                            <ol>
-                                <li>
-                                    <router-link :to="{name: 'Child-1-1-1'}">
-                                        Child-1-1-1
-                                    </router-link>
-                                </li>
-                            </ol>
-                        </li>
-                        <li>
-                            <router-link :to="{name: 'Child-1-2'}">
-                                Child-1-2
-                            </router-link>
-                        </li>
-                    </ol>
-                </li>
-                <li>
-                    <router-link :to="{name: 'Child-2'}">
-                        Child-2
-                        <ol>
-                            <li>
-                                <router-link :to="{name: 'Child-2-1'}">
-                                    Child-1-2
-                                </router-link>
-                            </li>
-                        </ol>
-                    </router-link>
-                </li>
-            </ol>
-        </div>
-    </v-ons-page>
-</template>
-
 <!-- app -->
 <div id="app"></div>
 
@@ -205,19 +150,15 @@
     ////////////////
     // Service Worker
     ////////////////
-    window.addEventListener('load', function () {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register("sw.js").then(function (registration) {
-                console.log("serviceWorker registed.")
-                registration.onupdatefound = () => {
-                    console.log('sw.jsのアップデートがあります！')
-                    registration.update()
-                }
-            }).catch(function (error) {
-                console.warn("serviceWorker error.", error)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
             });
-        }
-    });
+        });
+    }
 
     ////////////////
     // Vuex
@@ -281,27 +222,8 @@
         }
     });
 
-    const templatePage = {
-        template: '#template',
-    }
-
-    const notFoundPage = {
-        template: '#notfound',
-        methods: {
-            goHome() {
-                this.$router.push({name: 'Home'})
-            }
-        }
-    }
-
     const Balloon = {
-        template:
-            `<div class="conversation-balloon" :class="speaker">
-                <div class="avatar">
-                    <img src="images/assets/menu-icon/breakfast.png">
-                </div>
-                <p class="message">{{ message }}</p>
-            </div>`,
+        template: '#baloon',
         props: {
             speaker: {
                 type: String,
@@ -318,13 +240,7 @@
     };
 
     const ChatForm = {
-        template:
-            `<div class="chat-form">
-                <div class="form-container">
-                    <input type="text" class="message" v-model="message">
-                    <button class="submit" @click="submit">送信</button>
-                </div>
-            </div>`,
+        template: '#chatform',
         props: {
             applyEvent: {
                 type: String,
@@ -353,7 +269,6 @@
             return {
                 chatLogs: [
                     { speaker: 'my', message: 'hello'.repeat(10) },
-                    { speaker: 'other', message: 'hello world' }
                 ]
             }
         },
@@ -419,11 +334,6 @@
                         component: {name: 'request', extends: homePage},
                     }
                 ]
-            },
-            {
-                path: '*',
-                name: '404',
-                component: {name: 'notfound', extends: notFoundPage},
             }
         ]
     })
@@ -526,9 +436,6 @@
             },
             goBack() {
                 this.$router.push({name: this.$route.matched[this.$route.matched.length - 2].name})
-            },
-            goToPath(path) {
-                this.$router.push({path: path})
             }
         },
         created() {
@@ -549,58 +456,22 @@
         -webkit-tap-highlight-color: transparent;
     }
 
-    .profile-pic {
-        width: 100%;
-        background-color: #fff;
-        border-bottom: 1px solid #DDD;
-        color: rgba(0, 0, 0, .56);
+    .main-container {
+        height: 100%;
+        position: relative;
     }
 
-    .page--material .profile-pic {
-        background-color: #f6f6f6;
-    }
-
-    .profile-pic > img {
-        display: block;
-        max-width: 50%;
-    }
-
-    /*side menu*/
-    .side-menu-app-title {
-
-    }
-
-    /*card*/
-    .card {
-        padding: 8px;
-    }
-
-    .dish-picture > img {
-        border-radius: 10px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-    }
-
-    ons-row > ons-col {
-        padding: 2px;
-    }
-
-    ons-row > ons-col > .card {
-        margin: 2px;
-        padding: 2px;
-    }
-
-    /**/
+    /*baloon*/
     .conversation-balloon.my {
         text-align: right;
+        margin-right: 2px;
     }
-    .conversation-balloon.my > .avatar {
-        float: right;
-    }
+
     .conversation-balloon.my > .message {
         margin-right: 20px;
         background-color: #85FF49;
         text-align: left;
+        max-width: 50%;
     }
     .conversation-balloon.my > .message::before {
         right: -20px;
@@ -616,11 +487,13 @@
     .conversation-balloon.other > .message {
         margin-left: 0px;
         background-color: #FFFFFF;
+        max-width: 50%;
     }
     .conversation-balloon.other > .message::before {
         left: -20px;
         transform: rotate(25deg);
         border-right: 18px solid #FFFFFF;
+        margin-left: 2px;
     }
     .conversation-balloon > .avatar {
         width: 80px;
@@ -631,28 +504,23 @@
     .conversation-balloon > .avatar > img {
         display: block;
         margin: 0 auto;
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         margin-bottom: 5px;
-    }
-    .conversation-balloon > .avatar > .name {
-        width: 100%;
-        text-align: center;
-        color: white;
-        font-size: 0.8rem;
-        word-wrap: break-word;
     }
     .conversation-balloon > .message {
         display: inline-block;
         max-width: 280px;
-        padding: 10px 30px;
+        padding: 10px 20px;
         border-radius: 30px;
-        font-size: 1.3rem;
-        min-height: 30px;
+        font-size: 1.5rem;
+        min-height: 20px;
         word-wrap: break-word;
         position: relative;
+        margin: 5px;
     }
+
     .conversation-balloon > .message::before {
         content: "";
         display: block;
@@ -661,13 +529,13 @@
         border: 8px solid transparent;
     }
 
-    button {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        outline: none;
-        padding: 0;
-        appearance: none;
+
+    /*chat form*/
+    .chat-form {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
     }
 
     .form-container {
@@ -679,18 +547,20 @@
         top: 0;
         bottom: 0;
         left: 0;
-        right: 80px;
-        width: 100%;
+        right: 15%;
+        width: 75%;
         font-size: 1.3rem;
         padding: 0px;
+        margin: 5px 5px 5px 10px;
         border: 0px;
+        border-radius: 20px;
     }
     .form-container > .submit {
         position: absolute;
         top: 0;
         bottom: 0;
         right: 0;
-        width: 80px;
+        width: 20%;
         text-align: center;
         background-color: #4F83E1;
         color: white;
@@ -706,22 +576,24 @@
         appearance: none;
     }
 
-    /* timeline */
     .chat-timeline {
         position: fixed;
-        top: 0;
+        top: 40px;
         bottom: 40px;
         left: 0;
         right: 0;
-        min-width: 480px;
+        width: 100%;
         background-color: #88A4D4;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
+
     }
     .chat-timeline > .conversation-balloon {
-        margin-bottom: 30px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
+
 
 </style>
 
