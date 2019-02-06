@@ -53,8 +53,8 @@
                 </v-ons-toolbar-button>
             </div>
             <div class="center">
-                <v-ons-icon icon="fa-shield"></v-ons-icon>
-                shocknine{{ $route.params.request }}
+                <v-ons-icon icon="fa-cutlery"></v-ons-icon>
+                shocknine
             </div>
             <div class="right">
             </div>
@@ -268,7 +268,6 @@
         data: function () {
             return {
                 chatLogs: [
-                    { speaker: 'my', message: 'hello'.repeat(10) },
                 ]
             }
         },
@@ -281,7 +280,6 @@
                     speaker: 'my',
                     message: value
                 });
-
                 this.botSubmit();
                 this.scrollDown();
             },
@@ -300,7 +298,6 @@
                 setTimeout(() => {
                     const height = target.scrollHeight - target.offsetHeight;
                     target.scrollTop += 10;
-
                     if (height <= target.scrollTop) {
                         return;
                     } else {
@@ -314,12 +311,6 @@
             chatForm: ChatForm
         },
     };
-
-
-    ////////////////
-    // tutorial page
-    ////////////////
-    const tutorialPage = {};
 
     const router = new VueRouter({
         routes: [
@@ -528,7 +519,6 @@
         top: 5px;
         border: 8px solid transparent;
     }
-
 
     /*chat form*/
     .chat-form {
