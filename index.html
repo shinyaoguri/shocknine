@@ -339,7 +339,7 @@
                 return repryText
             },
             getLunchDayMenu (date) {
-                Axios.get('http://xrium.xyz/handa-lunch-debug/menues/handa_kyusyoku_menu_201702.csv')
+                axios.get('http://xrium.xyz/handa-lunch-debug/menues/handa_kyusyoku_menu_201702.csv')
                     .then(response => {
                         console.log(response)
                     })
