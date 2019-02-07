@@ -60,7 +60,6 @@
             </div>
         </v-ons-toolbar>
 
-
         <main class="main-container">
             <div class="chat-timeline">
                 <balloon
@@ -143,10 +142,6 @@
 <div id="app"></div>
 
 <script>
-
-    Vue.use(Vuex)
-    Vue.use(VueRouter)
-
     ////////////////
     // Service Worker
     ////////////////
@@ -180,16 +175,6 @@
                         if (state.stack.length > 1) {
                             state.stack.pop()
                         }
-                    },
-                    replace(state, page) {
-                        state.stack.pop();
-                        state.stack.push(page)
-                    },
-                    reset(state, page) {
-                        state.stack = [page || state.stack[0]]
-                    },
-                    options(state, newOptions = {}) {
-                        state.options = newOptions
                     }
                 },
             },
@@ -265,11 +250,16 @@
     ////////////////
     const homePage = {
         template: '#home',
+        props: ['request'],
         data: function () {
             return {
                 chatLogs: [
                 ]
             }
+        },
+        mounted() {
+            firstCommand = this.getCommand(this.$route.params.request)
+            this.submit(firstCommand)
         },
         methods: {
             toggleMenu: function () {
@@ -284,14 +274,18 @@
                 this.scrollDown();
             },
             botSubmit () {
-                setTimeout(() => {
-                    this.chatLogs.push({
-                        speaker: 'other',
-                        message: 'hello world'
-                    });
-
-                    this.scrollDown();
-                }, 1000);
+                let lastMessage = this.chatLogs[this.chatLogs.length-1]
+                let repMessage = this.generateRepry(lastMessage.message)
+                repMessage.forEach( rm => {
+                    console.log(rm)
+                    setTimeout(() => {
+                        this.chatLogs.push({
+                            speaker: 'other',
+                            message: rm
+                        })
+                        this.scrollDown()
+                    }, 1000)
+                })
             },
             scrollDown () {
                 const target = this.$el.querySelector('.chat-timeline');
@@ -304,6 +298,53 @@
                         this.scrollDown();
                     }
                 }, 0);
+            },
+            getCommand (pathParam) {
+                switch (pathParam) {
+                    case 'today':
+                        return '今日の給食を教えて'
+                        break
+                    case 'thisweek':
+                        return '今週の給食を教えて'
+                        break
+                    case 'lastweek':
+                        return '先週の給食を教えて'
+                        break
+                    case 'nextweek':
+                        return '来週の給食を教えて'
+                        break
+                    default:
+                        return '今週の給食を教えて'
+                }
+            },
+            generateRepry (message) {
+                let repryText = []
+                switch (true) {
+                    case /今日/.test(message):
+                        repryText.push('今日の給食は・・・')
+                        repryText.push('hogehoge')
+                        break
+                    case /今週/.test(message):
+                        repryText.push('今週の給食は・・・')
+                        repryText.push('hogehoge')
+                        break
+                    case /先週/.test(message):
+                        repryText.push('先週の給食は・・・')
+                        repryText.push('hogehoge')
+                        break
+                    case /来週/.test(message):
+                        repryText.push('来週の給食は・・・')
+                        repryText.push('hogehoge')
+                        break
+                    case /(\d+)月(\d+)日/.test(message):
+                        ds = message.match(/(\d+)月(\d+)日/)
+                        repryText.push(ds[1] + '月' + ds[2] + '日の給食は・・・')
+                        repryText.push('hogehoge')
+                        break
+                    default:
+                        repryText.push('ちょっとよくわからなかったので，「今日の給食を教えて」「来週の給食を教えて」などと聞いてみてね')
+                }
+                return repryText
             }
         },
         components: {
@@ -334,8 +375,8 @@
     ////////////////
     new Vue({
         el: '#app',
-        router: router,
         template: "#splitter",
+        router: router,
         store: store,
         data: function () {
             return {
@@ -433,6 +474,9 @@
             const mapRouteStack = route => store.state.navigator.stack = route.matched.map(m => m.components.default)
             mapRouteStack(this.$route)
             router.beforeEach((to, from, next) => mapRouteStack(to) && next())
+        },
+        watch: {
+
         }
     });
 
