@@ -82,7 +82,7 @@
         <div class="avatar" v-if="speaker === 'other'">
             <img src="images/icon-ios/Icon-60@3x.png">
         </div>
-        <p class="message">{{ message }}</p>
+        <div class="message">{{ message }}</div>
     </div>
 </div>
 </template>
@@ -193,16 +193,6 @@
                         }
                     }
                 },
-            },
-            data_table: {
-                strict: true,
-                namespaved: true,
-                state: {},
-                actions: {
-                    async getCsv() {
-
-                    }
-                }
             }
         }
     });
@@ -266,18 +256,19 @@
                 this.$store.commit('splitter/toggle')
             },
             submit (value) {
-                this.chatLogs.push({
-                    speaker: 'my',
-                    message: value
-                });
-                this.botSubmit();
-                this.scrollDown();
+                if(value != ''){
+                    this.chatLogs.push({
+                        speaker: 'my',
+                        message: value
+                    });
+                    this.botSubmit();
+                    this.scrollDown();
+                }
             },
             botSubmit () {
                 let lastMessage = this.chatLogs[this.chatLogs.length-1]
                 let repMessage = this.generateRepry(lastMessage.message)
                 repMessage.forEach( rm => {
-                    console.log(rm)
                     setTimeout(() => {
                         this.chatLogs.push({
                             speaker: 'other',
@@ -318,11 +309,12 @@
                 }
             },
             generateRepry (message) {
+                let date = new Date()
                 let repryText = []
                 switch (true) {
                     case /今日/.test(message):
-                        repryText.push('今日の給食は・・・')
-                        repryText.push('hogehoge')
+                        menu = this.getLunchDayMenu('0207')
+                        repryText.push('今日の給食は\n' + menu)
                         break
                     case /今週/.test(message):
                         repryText.push('今週の給食は・・・')
@@ -345,7 +337,23 @@
                         repryText.push('ちょっとよくわからなかったので，「今日の給食を教えて」「来週の給食を教えて」などと聞いてみてね')
                 }
                 return repryText
-            }
+            },
+            getLunchDayMenu (date) {
+                Axios.get('http://xrium.xyz/handa-lunch-debug/menues/handa_kyusyoku_menu_201702.csv')
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .then( () => {
+
+                    })
+
+                return '🍚ごはん\n・★ししゃもフライのなんばんづけ（２び）\n・はくさいとキャベツとわかめのあえもの\n・なまあげのうまに\n・牛乳\n(小)644Cal\n(中)795Cal'
+
+            },
+            getLunchWeekMenu (week) {}
         },
         components: {
             balloon: Balloon,
@@ -474,9 +482,6 @@
             const mapRouteStack = route => store.state.navigator.stack = route.matched.map(m => m.components.default)
             mapRouteStack(this.$route)
             router.beforeEach((to, from, next) => mapRouteStack(to) && next())
-        },
-        watch: {
-
         }
     });
 
@@ -520,9 +525,9 @@
         float: left;
     }
     .conversation-balloon.other > .message {
-        margin-left: 0px;
+        margin-left: 10px;
         background-color: #FFFFFF;
-        max-width: 50%;
+        max-width: 70%;
     }
     .conversation-balloon.other > .message::before {
         left: -20px;
@@ -531,7 +536,7 @@
         margin-left: 2px;
     }
     .conversation-balloon > .avatar {
-        width: 80px;
+        width: 60px;
     }
     .conversation-balloon > .avatar::after {
         clear: both;
@@ -545,11 +550,12 @@
         margin-bottom: 5px;
     }
     .conversation-balloon > .message {
+        white-space: pre-line;
         display: inline-block;
         max-width: 280px;
-        padding: 10px 20px;
+        padding: 10px 10px;
         border-radius: 30px;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         min-height: 20px;
         word-wrap: break-word;
         position: relative;
