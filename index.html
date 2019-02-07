@@ -333,13 +333,16 @@
                         repryText.push(ds[1] + '月' + ds[2] + '日の給食は・・・')
                         repryText.push('hogehoge')
                         break
+                    case /version/.test(message):
+                        repryText.push('Ver:0.0.1')
+                        break
                     default:
                         repryText.push('ちょっとよくわからなかったので，「今日の給食を教えて」「来週の給食を教えて」などと聞いてみてね')
                 }
                 return repryText
             },
             getLunchDayMenu (date) {
-                axios.get('http://xrium.xyz/handa-lunch-debug/menues/handa_kyusyoku_menu_201702.csv')
+                axios.get('https://xrium.xyz/handa-lunch-debug/menues/handa_kyusyoku_menu_201702.csv')
                     .then(response => {
                         console.log(response)
                     })
