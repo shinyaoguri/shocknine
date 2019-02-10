@@ -493,7 +493,7 @@
                             break
                         case /version/.test(message):
                             repryText.push('Ver:0.0.1')
-                            resolve('Ver.' + this.version)
+                            resolve(repryText)
                             break
                         default:
                             repryText.push('ちょっとよくわからなかったので，もう一度聞いてみてね．\n聞き方の例\n「今日の給食を教えて」\n「来週の給食を教えて」\n「7月20日の給食を教えて」')
