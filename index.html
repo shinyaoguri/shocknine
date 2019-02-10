@@ -510,7 +510,9 @@
                     let table = store.state.model.tables.filter( (item, index) => {
                         return (item.year === y && item.month === m) ? true : false
                     })
+                    console.log('table url')
                     let tableUrl = table[0].url
+                    console.log(tableUrl)
 
                     //TODO
                     // 本来であればCSVとかJsonとか解析しやすい形式が望ましいが
@@ -641,13 +643,14 @@
                     let latestDate = new Date((date.getFullYear()) + '-' + (date.getMonth()+3))
                     let startDate = new Date('2017-2')
                     for (var ym=startDate; ym<latestDate; ym.setMonth(ym.getMonth()+1)) {
-                        url = 'http://linkdata.org/api/1/rdf1s4907i/handa_kyushoku_menu_' + ym.getFullYear()  + ('0'+(ym.getMonth()+1)).slice(-2) + '_rdf.json'
+                        url = 'https://linkdata.org/api/1/rdf1s4907i/handa_kyushoku_menu_' + ym.getFullYear()  + ('0'+(ym.getMonth()+1)).slice(-2) + '_rdf.json'
                         store.commit('model/pushTableUrl', {
                             year: ym.getFullYear(),
                             month: (ym.getMonth()+1),
                             url: url
                         })
                     }
+                    console.log('url登録done')
                 })
                 .catch( error => {
                     console.error('Link一覧が取得できない' + error)
