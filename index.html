@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-android/icon-192x192.png">
 
     <!-- android -->
-    <!--<link rel="manifest" href="manifest.json">-->
+    <link rel="manifest" href="manifest.json">
 
     <!-- mobile  -->
     <meta name="viewport"
@@ -148,15 +148,15 @@
     ////////////////
     // Service Worker
     ////////////////
-    // if ('serviceWorker' in navigator) {
-    //     window.addEventListener('load', function() {
-    //         navigator.serviceWorker.register('/sw.js').then(function(registration) {
-    //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    //         }, function(err) {
-    //             console.log('ServiceWorker registration failed: ', err);
-    //         });
-    //     });
-    // }
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
 
     ////////////////
     // Vuex
@@ -511,45 +511,36 @@
                     let table = store.state.model.tables.filter( (item, index) => {
                         return (item.year === y && item.month === m) ? true : false
                     })
-                    console.log('table url')
-                    console.log(store.state.model.tables)
-                    console.log(table)
                     let tableUrl = table[0].url
-                    console.log(tableUrl)
 
-                    //TODO
-                    // 本来であればCSVとかJsonとか解析しやすい形式が望ましいが
-                    // RDFを解析するため若干煩雑になっている
-                    Vue.jsonp(tableUrl)
-                        .then( json => {
-                            console.log('json ' + json)
-                            for (key in json) {
-                                let dayMenu = json[key]
-                                let dayMenuKeys = Object.keys(dayMenu)
-                                let tmp_y = Number(dayMenu[dayMenuKeys[2]][0].value)
-                                let tmp_m = Number(dayMenu[dayMenuKeys[3]][0].value)
-                                let tmp_d = Number(dayMenu[dayMenuKeys[4]][0].value)
+                    axios.get(tableUrl)
+                        .then(csv => {
+                            let splited_csv = csv.data.split('\n')
+                            let menu_table = []
+                            splited_csv.forEach(item => {
+                                menu_table.push(item.split(',').filter(v => v))
+                            })
 
-                                if ((tmp_y === y) && (tmp_m === m) && (tmp_d === d)) {
-                                    if (Object.keys(dayMenu).length != 5) {
+                            menu_table.forEach(row => {
+                                if ((Number(row[2]) === y) && (Number(row[3]) === m) && (Number(row[4]) === d)) {
+                                    if (row.length != 6) {
                                         //日付情報を追加
-                                        repText = (tmp_y + '年' + tmp_m + '月' + tmp_d + '日(' + dd + ')の給食は\n')
+                                        repText = (y + '年' + m + '月' + d + '日(' + dd + ')の給食は\n')
                                         //メニュー情報を追加
-                                        tmp_menu_keys = dayMenuKeys.slice(5, dayMenuKeys.length-2)
-                                        for (mk in tmp_menu_keys) {
-                                            tmp_key = tmp_menu_keys[mk]
-                                            tmp_menu = String(dayMenu[tmp_key][0].value)
-                                            repText = (repText + '・' + tmp_menu + '\n')
+                                        let tmp_menues = row.slice(5, row.length-2)
+
+                                        for (let i in tmp_menues) {
+                                            repText = repText + '・' + tmp_menues[i] + '\n'
                                         }
                                         //カロリー情報を追加
-                                        repText = (repText + '小:' + dayMenu[dayMenuKeys.slice(-2)[0]][0].value + ' cal, ')
-                                        repText = (repText + '中:' + dayMenu[dayMenuKeys.slice(-1)[0]][0].value + ' cal\n')
+                                        repText = (repText + '小:' + row[row.length-2] + ' cal, ')
+                                        repText = (repText + '中:' + row[row.length-1] + ' cal\n')
                                     }
                                 }
-                            }
+                            })
                             resolve(repText)
                         })
-                        .catch( error => {
+                        .catch(error => {
                             reject(error)
                         })
                 })
@@ -638,16 +629,14 @@
                     store.commit('model/setLinks', response.data.links)
                     store.commit('model/setAllTablesUrl', response.data.allTableUrl)
                     //TODO
-                    // 本当はLinkDataからdatapackage.jsonを取得して解析したいが
-                    // レスポンスが20秒以上もあるため使い物にならない．
-                    // とりあえず現状は手動で取得すべきファイル名を生成する
-                    // また，本来であればcsvかjson形式のファイルが良いがrdf_jsonのファイルのレスポンスが最速だったのでそちらを使用している
+                    // 本当はLinkDataからAPI経由で全てのデータを取得すべきだた使い物にならない
+                    // なので自前でダウンロードし，csvファイルを取得する
                     //2017年2月~最新のURLの生成
                     let date = new Date()
                     let latestDate = new Date(date.getTime() + 20*24*60*60*1000)
                     let startDate = new Date('2017-02')
                     for (let ym=startDate; ym<latestDate; ym.setMonth(ym.getMonth()+1)) {
-                        url = 'http://linkdata.org/api/1/rdf1s4907i/handa_kyushoku_menu_' + ym.getFullYear()  + ('0'+(ym.getMonth()+1)).slice(-2) + '_rdf.json'
+                        url = 'data/handa_kyushoku_menu_' + ym.getFullYear()  + ('0'+(ym.getMonth()+1)).slice(-2) + '.csv'
                         store.commit('model/pushTableUrl', {
                             year: ym.getFullYear(),
                             month: (ym.getMonth()+1),
