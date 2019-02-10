@@ -513,6 +513,8 @@
                     })
                     let tableUrl = table[0].url
 
+                    //TODO
+                    //本来であればAPIで提供されたデータにアクセスしたい
                     axios.get(tableUrl)
                         .then(csv => {
                             let splited_csv = csv.data.split('\n')
@@ -624,6 +626,9 @@
             }
         },
         beforeCreate() {
+            if (ons.platform.isIPhoneX()) {
+                document.documentElement.setAttribute('onsflag-iphonex-landscape', '');
+            }
             axios.get('data.json')
                 .then( response => {
                     store.commit('model/setLinks', response.data.links)
@@ -654,11 +659,6 @@
             router.beforeEach((to, from, next) => mapRouteStack(to) && next())
         }
     });
-
-    //TODO:iPhoneX,XS,MS Max, iPad 2018-への対応
-    if (ons.platform.isIPhoneX()) {
-        document.documentElement.setAttribute('onsflag-iphonex-landscape', '');
-    }
 </script>
 
 <style scoped>
