@@ -39,6 +39,7 @@
     <script src="https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.js"></script>
     <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue-router@3.0.2/dist/vue-router.js"></script>
+    <script src="https://unpkg.com/vue-jsonp@0.1.8/dist/vue-jsonp.umd.js"></script>
 </head>
 
 <body style="position:fixed;">
@@ -142,6 +143,7 @@
 <div id="app"></div>
 
 <script>
+     Vue.use(vueJsonp)
     ////////////////
     // Service Worker
     ////////////////
@@ -164,8 +166,7 @@
                 strict: true,
                 namespaced: true,
                 state: {
-                    stack: [],
-                    options: {}
+                    stack: []
                 },
                 mutations: {
                     push(state, page) {
@@ -193,10 +194,33 @@
                         }
                     }
                 },
+            },
+            model: {
+                strict: true,
+                namespaced: true,
+                state: {
+                    links: [],
+                    allTableUrl: '',
+                    tables: []
+                },
+                mutations: {
+                    setLinks(state, l) {
+                        state.links = l
+                    },
+                    setAllTablesUrl(state, url) {
+                        state.allTableUrl = url
+                    },
+                    pushTableUrl(state, data) {
+                        state.tables.push(data)
+                    }
+                }
             }
         }
     });
 
+     ////////////////
+     // Components
+     ////////////////
     const Balloon = {
         template: '#baloon',
         props: {
@@ -243,13 +267,15 @@
         props: ['request'],
         data: function () {
             return {
-                chatLogs: [
-                ]
+                chatLogs: [],
+                version: '0.0.1'
             }
         },
         mounted() {
-            firstCommand = this.getCommand(this.$route.params.request)
-            this.submit(firstCommand)
+            setTimeout(() => {
+                firstCommand = this.getCommand(this.$route.params.request)
+                this.submit(firstCommand)
+            }, 1000)
         },
         methods: {
             toggleMenu: function () {
@@ -261,22 +287,34 @@
                         speaker: 'my',
                         message: value
                     });
-                    this.botSubmit();
-                    this.scrollDown();
+                    this.scrollDown()
+                    this.botSubmit()
+                    this.scrollDown()
+                }
+            },
+            deleyUpdate (messages) {
+                if (messages.length != 0) {
+                    setTimeout( () => {
+                        if (messages[0] != '') {
+                            this.chatLogs.push({
+                                speaker: 'other',
+                                message: messages[0]
+                            })
+                        }
+                        this.scrollDown()
+                        this.deleyUpdate(messages.slice(1, messages.length+1))
+                    }, 500)
                 }
             },
             botSubmit () {
                 let lastMessage = this.chatLogs[this.chatLogs.length-1]
-                let repMessage = this.generateRepry(lastMessage.message)
-                repMessage.forEach( rm => {
-                    setTimeout(() => {
-                        this.chatLogs.push({
-                            speaker: 'other',
-                            message: rm
-                        })
-                        this.scrollDown()
-                    }, 1000)
-                })
+                this.generateRepry(lastMessage.message)
+                    .then(genText => {
+                        this.deleyUpdate(genText)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
             },
             scrollDown () {
                 const target = this.$el.querySelector('.chat-timeline');
@@ -305,58 +343,230 @@
                         return '来週の給食を教えて'
                         break
                     default:
-                        return '今週の給食を教えて'
+                        return '今日の給食を教えて'
                 }
             },
             generateRepry (message) {
-                let date = new Date()
-                let repryText = []
-                switch (true) {
-                    case /今日/.test(message):
-                        menu = this.getLunchDayMenu('0207')
-                        repryText.push('今日の給食は\n' + menu)
-                        break
-                    case /今週/.test(message):
-                        repryText.push('今週の給食は・・・')
-                        repryText.push('hogehoge')
-                        break
-                    case /先週/.test(message):
-                        repryText.push('先週の給食は・・・')
-                        repryText.push('hogehoge')
-                        break
-                    case /来週/.test(message):
-                        repryText.push('来週の給食は・・・')
-                        repryText.push('hogehoge')
-                        break
-                    case /(\d+)月(\d+)日/.test(message):
-                        ds = message.match(/(\d+)月(\d+)日/)
-                        repryText.push(ds[1] + '月' + ds[2] + '日の給食は・・・')
-                        repryText.push('hogehoge')
-                        break
-                    case /version/.test(message):
-                        repryText.push('Ver:0.0.1')
-                        break
-                    default:
-                        repryText.push('ちょっとよくわからなかったので，「今日の給食を教えて」「来週の給食を教えて」などと聞いてみてね')
-                }
-                return repryText
+                return new Promise((resolve, reject) => {
+                    let date = new Date()
+                    let repryText = []
+                    switch (true) {
+                        case /(今日|きょう|today)/.test(message):
+                            this.getLunchDayMenu(date)
+                                .then(menu_str => {
+                                    repryText.push('今日の給食ですね．お調べします．')
+                                    if (menu_str != '') {
+                                        repryText.push(menu_str)
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                    resolve(repryText)
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /(明日|あした|tomorrow)/.test(message):
+                            this.getLunchDayMenu(new Date(date.getTime() + 1*24*60*60*1000))
+                                .then(menu_str => {
+                                    repryText.push('明日の給食ですね．お調べします．')
+                                    if (menu_str != '') {
+                                        repryText.push(menu_str)
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                    resolve(repryText)
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /(明後日|あさって|dayaftertomorrow)/.test(message):
+                            this.getLunchDayMenu(new Date(date.getTime() + 2*24*60*60*1000))
+                                .then(menu_str => {
+                                    repryText.push('明後日の給食ですね．お調べします．')
+                                    if (menu_str != '') {
+                                        repryText.push(menu_str)
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                    resolve(repryText)
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /(昨日|きのう|tomorrow)/.test(message):
+                            this.getLunchDayMenu(new Date(date.getTime() - 1*24*60*60*1000))
+                                .then(menu_str => {
+                                    repryText.push('昨日の給食ですね．お調べします．')
+                                    if (menu_str != '') {
+                                        repryText.push(menu_str)
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                    resolve(repryText)
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /(今週|こんしゅう|thisweek)/.test(message):
+                            this.getLunchWeekMenu(date)
+                                .then(menu_str_arr => {
+                                    repryText.push('今週の給食ですね．お調べします．')
+                                    if (menu_str_arr != []) {
+                                        resolve(repryText.concat(menu_str_arr))
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /(先週|せんしゅう|lastweek)/.test(message):
+                            this.getLunchWeekMenu(new Date(date.getTime() - 7*24*60*60*1000))
+                                .then(menu_str_arr => {
+                                    repryText.push('先週の給食ですね．お調べします．')
+                                    if (menu_str_arr != []) {
+                                        resolve(repryText.concat(menu_str_arr))
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /(来週|らいしゅう|nextweek)/.test(message):
+                            this.getLunchWeekMenu(new Date(date.getTime() + 7*24*60*60*1000))
+                                .then(menu_str_arr => {
+                                    repryText.push('来週の給食ですね．お調べします．')
+                                    if (menu_str_arr != []) {
+                                        resolve(repryText.concat(menu_str_arr))
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /(20[0-9][0-9])年([1-9]|1[0-2])月([1-9]|[12][0-9]|3[01])日/.test(message):
+                            let tmp_match2 = message.match(/(20[0-9][0-9])年([1-9]|1[0-2])月([1-9]|[12][0-9]|3[01])日/)
+                            let tmp_y2 = tmp_match2[1]
+                            let tmp_m2 = tmp_match2[2]
+                            let tmp_d2 = tmp_match2[3]
+                            this.getLunchDayMenu(new Date(tmp_y2, tmp_m2-1, tmp_d2))
+                                .then(menu_str => {
+                                    repryText.push(tmp_y2 + '年' + tmp_m2 + '月' + tmp_d2 + '日の給食ですね．お調べします.')
+                                    if (menu_str != '') {
+                                        repryText.push(menu_str)
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                    resolve(repryText)
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /([1-9]|1[0-2])月([1-9]|[12][0-9]|3[01])日/.test(message):
+                            let tmp_match = message.match(/([1-9]|1[0-2])月([1-9]|[12][0-9]|3[01])日/)
+                            let tmp_m = tmp_match[1]
+                            let tmp_d = tmp_match[2]
+                            this.getLunchDayMenu(new Date(date.getFullYear(), tmp_m-1, tmp_d))
+                                .then(menu_str => {
+                                    repryText.push(tmp_m + '月' + tmp_d + '日の給食ですね．お調べします.')
+                                    if (menu_str != '') {
+                                        repryText.push(menu_str)
+                                    } else {
+                                        repryText.push('献立が見つかりません')
+                                    }
+                                    resolve(repryText)
+                                })
+                                .catch(error => {
+                                    reject(error)
+                                })
+                            break
+                        case /version/.test(message):
+                            repryText.push('Ver:0.0.1')
+                            resolve('Ver.' + this.version)
+                            break
+                        default:
+                            repryText.push('ちょっとよくわからなかったので，もう一度聞いてみてね．\n聞き方の例\n「今日の給食を教えて」\n「来週の給食を教えて」\n「7月20日の給食を教えて」')
+                            resolve(repryText)
+                    }
+                })
             },
             getLunchDayMenu (date) {
-                axios.get('https://xrium.xyz/handa-lunch-debug/menues/handa_kyusyoku_menu_201702.csv')
-                    .then(response => {
-                        console.log(response)
+                return new Promise( (resolve, reject) => {
+                    let y = date.getFullYear()
+                    let m = date.getMonth()+1
+                    let d = date.getDate()
+                    let dd = (date.getDay() === 0) ? '日' : (date.getDay() === 1 ? '月' : (date.getDay() === 2 ? '火' : (date.getDay() === 3 ? '水' : (date.getDay() === 4 ? '木' : (date.getDay() === 5 ? '金' : '土')))))
+                    let repText = ''
+                    let table = store.state.model.tables.filter( (item, index) => {
+                        return (item.year === y && item.month === m) ? true : false
                     })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                    .then( () => {
+                    let tableUrl = table[0].url
 
-                    })
+                    //TODO
+                    // 本来であればCSVとかJsonとか解析しやすい形式が望ましいが
+                    // RDFを解析するため若干煩雑になっている
+                    Vue.jsonp(tableUrl)
+                        .then( json => {
+                            for (key in json) {
+                                let dayMenu = json[key]
+                                let dayMenuKeys = Object.keys(dayMenu)
+                                let tmp_y = Number(dayMenu[dayMenuKeys[2]][0].value)
+                                let tmp_m = Number(dayMenu[dayMenuKeys[3]][0].value)
+                                let tmp_d = Number(dayMenu[dayMenuKeys[4]][0].value)
 
-                return '🍚ごはん\n・★ししゃもフライのなんばんづけ（２び）\n・はくさいとキャベツとわかめのあえもの\n・なまあげのうまに\n・牛乳\n(小)644Cal\n(中)795Cal'
-
+                                if ((tmp_y === y) && (tmp_m === m) && (tmp_d === d)) {
+                                    if (Object.keys(dayMenu).length != 5) {
+                                        //日付情報を追加
+                                        repText = (tmp_y + '年' + tmp_m + '月' + tmp_d + '日(' + dd + ')の給食は\n')
+                                        //メニュー情報を追加
+                                        tmp_menu_keys = dayMenuKeys.slice(5, dayMenuKeys.length-2)
+                                        for (mk in tmp_menu_keys) {
+                                            tmp_key = tmp_menu_keys[mk]
+                                            tmp_menu = String(dayMenu[tmp_key][0].value)
+                                            repText = (repText + '・' + tmp_menu + '\n')
+                                        }
+                                        //カロリー情報を追加
+                                        repText = (repText + '小:' + dayMenu[dayMenuKeys.slice(-2)[0]][0].value + ' cal, ')
+                                        repText = (repText + '中:' + dayMenu[dayMenuKeys.slice(-1)[0]][0].value + ' cal\n')
+                                    }
+                                }
+                            }
+                            resolve(repText)
+                        })
+                        .catch( error => {
+                            reject(error)
+                        })
+                })
             },
-            getLunchWeekMenu (week) {}
+            getLunchWeekMenu (date) {
+                return new Promise((resolve, reject) => {
+                    let dd_index = date.getDay()
+                    let monday_date = (dd_index === 0) ? new Date(date.getTime() - 6*24*60*60*1000) : new Date(date.getTime() - (dd_index-1)*24*60*60*1000)
+
+                    let promises = []
+                    for (let w=0; w<7; w++) {
+                        let tmp_week = new Date(monday_date.getTime() + w*24*60*60*1000)
+                        promises.push(this.getLunchDayMenu(tmp_week))
+                    }
+                    Promise.all(promises)
+                        .then(results => {
+                            resolve(results)
+                        })
+                        .catch(error => {
+                            reject(error)
+                        })
+                })
+            }
         },
         components: {
             balloon: Balloon,
@@ -364,6 +574,9 @@
         },
     };
 
+     ////////////////
+     // router
+     ////////////////
     const router = new VueRouter({
         routes: [
             {
@@ -389,97 +602,56 @@
         template: "#splitter",
         router: router,
         store: store,
-        data: function () {
-            return {
-                links: [
-                    {
-                        title: '今日の献立',
-                        icon: 'images/assets/menu-icon/breakfast.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyonokondate.html'
-                    },
-                    {
-                        title: '献立表',
-                        icon: 'images/assets/menu-icon/menu.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kondate.html'
-                    },
-                    {
-                        title: '食物アレルギーのある児童生徒への対応',
-                        icon: 'images/assets/menu-icon/danger.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/allergytaio.html'
-                    },
-                    {
-                        title: '給食だより',
-                        icon: 'images/assets/menu-icon/newspaper.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokudayori.html'
-                    },
-                    {
-                        title: '台風等における学校給食の取扱い',
-                        icon: 'images/assets/menu-icon/wind.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/taifu.html'
-                    },
-                    {
-                        title: '給食物資の産地',
-                        icon: 'images/assets/menu-icon/farmer.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushoku.html'
-                    },
-                    {
-                        title: '学校給食レシピ',
-                        icon: 'images/assets/menu-icon/whisk.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyuusyokuresipi1.html'
-                    },
-                    {
-                        title: '学校給食費',
-                        icon: 'images/assets/menu-icon/piggy-bank.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokuhi.html'
-                    },
-                    {
-                        title: '放射線測定結果',
-                        icon: 'images/assets/menu-icon/speedometer.png',
-                        url: 'https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html'
-                    },
-                    {
-                        title: '半田市',
-                        icon: 'images/assets/menu-icon/handa.png',
-                        url: 'http://www.city.handa.lg.jp'
-                    },
-                    {
-                        title: '名古屋大学 Media&Design Group',
-                        icon: 'images/assets/menu-icon/yes-t-logo-front-bk.png',
-                        url: 'http://www.mdg.ss.is.nagoya-u.ac.jp'
-                    },
-                    {
-                        title: '開発者',
-                        icon: 'images/assets/menu-icon/ogrium.png',
-                        url: 'https://shinyaoguri.com'
-                    },
-                    {
-                        title: '著作権情報',
-                        icon: 'images/assets/menu-icon/gdpr.png',
-                        url: 'https://raw.githubusercontent.com/shinyaoguri/shocknine/master/LICENSE'
-                    }
-                ]
-            }
-        },
         computed: {
-            pageStack: function () {
+            pageStack() {
                 return store.state.navigator.stack
             },
             menuIsOpen: {
-                get: function () {
+                get() {
                     return store.state.splitter.isOpen
                 },
-                set: function (newValue) {
+                set(newValue) {
                     store.commit('splitter/toggle', newValue)
                 }
+            },
+            links() {
+                return store.state.model.links
             }
         },
         methods: {
-            loadLink: function (url) {
+            loadLink(url) {
                 window.open(url, '_blank')
             },
             goBack() {
                 this.$router.push({name: this.$route.matched[this.$route.matched.length - 2].name})
             }
+        },
+        beforeCreate() {
+            axios.get('data.json')
+                .then( response => {
+                    store.commit('model/setLinks', response.data.links)
+                    store.commit('model/setAllTablesUrl', response.data.allTableUrl)
+                    //TODO
+                    // 本当はLinkDataからdatapackage.jsonを取得して解析したいが
+                    // レスポンスが20秒以上もあるため使い物にならない．
+                    // とりあえず現状は手動で取得すべきファイル名を生成する
+                    // また，本来であればcsvかjson形式のファイルが良いがrdf_jsonのファイルのレスポンスが最速だったのでそちらを使用している
+                    //2017年2月~最新のURLの生成
+                    let date = new Date()
+                    let latestDate = new Date((date.getFullYear()) + '-' + (date.getMonth()+3))
+                    let startDate = new Date('2017-2')
+                    for (var ym=startDate; ym<latestDate; ym.setMonth(ym.getMonth()+1)) {
+                        url = 'http://linkdata.org/api/1/rdf1s4907i/handa_kyushoku_menu_' + ym.getFullYear()  + ('0'+(ym.getMonth()+1)).slice(-2) + '_rdf.json'
+                        store.commit('model/pushTableUrl', {
+                            year: ym.getFullYear(),
+                            month: (ym.getMonth()+1),
+                            url: url
+                        })
+                    }
+                })
+                .catch( error => {
+                    console.error('Link一覧が取得できない' + error)
+                })
         },
         created() {
             const mapRouteStack = route => store.state.navigator.stack = route.matched.map(m => m.components.default)

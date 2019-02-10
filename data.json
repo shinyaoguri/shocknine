@@ -1,0 +1,71 @@
+{
+  "links": [
+    {
+      "title": "今日の献立",
+      "icon": "images/assets/menu-icon/breakfast.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyonokondate.html"
+    },
+    {
+      "title": "献立表",
+      "icon": "images/assets/menu-icon/menu.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kondate.html"
+    },
+    {
+      "title": "食物アレルギーのある児童生徒への対応",
+      "icon": "images/assets/menu-icon/danger.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/allergytaio.html"
+    },
+    {
+      "title": "給食だより",
+      "icon": "images/assets/menu-icon/newspaper.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokudayori.html"
+    },
+    {
+      "title": "台風等における学校給食の取扱い",
+      "icon": "images/assets/menu-icon/wind.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/taifu.html"
+    },
+    {
+      "title": "給食物資の産地",
+      "icon": "images/assets/menu-icon/farmer.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushoku.html"
+    },
+    {
+      "title": "学校給食レシピ",
+      "icon": "images/assets/menu-icon/whisk.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyuusyokuresipi1.html"
+    },
+    {
+      "title": "学校給食費",
+      "icon": "images/assets/menu-icon/piggy-bank.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/kyushokuhi.html"
+    },
+    {
+      "title": "放射線測定結果",
+      "icon": "images/assets/menu-icon/speedometer.png",
+      "url": "https://www.city.handa.lg.jp/kyushoku/kosodate/kyoiku/kyushoku/hoshasen.html"
+    },
+    {
+      "title": "半田市",
+      "icon": "images/assets/menu-icon/handa.png",
+      "url": "http://www.city.handa.lg.jp"
+    },
+    {
+      "title": "名古屋大学 Media&Design Group",
+      "icon": "images/assets/menu-icon/yes-t-logo-front-bk.png",
+      "url": "http://www.mdg.ss.is.nagoya-u.ac.jp"
+    },
+    {
+      "title": "開発者",
+      "icon": "images/assets/menu-icon/ogrium.png",
+      "url": "https://shinyaoguri.com"
+    },
+    {
+      "title": "著作権情報",
+      "icon": "images/assets/menu-icon/gdpr.png",
+      "url": "https://raw.githubusercontent.com/shinyaoguri/shocknine/master/LICENSE"
+    }
+  ],
+  "allTableUrl": "http://linkdata.org/api/1/rdf1s4907i/datapackage.json",
+  "tablesUrl": []
+}
