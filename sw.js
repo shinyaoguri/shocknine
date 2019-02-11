@@ -1,7 +1,6 @@
 var CACHE_NAME  = "shocknine-cache-v0-01";
 
 var urlsToCache = [
-    "/",
 ];
 
 // 残したいキャッシュのバージョンをこの配列に入れる
