@@ -49,31 +49,41 @@
     <v-ons-page>
         <v-ons-toolbar>
             <div class="left">
-                <v-ons-toolbar-button @click="toggleMenu">
-                    <v-ons-icon icon="fa-bars"></v-ons-icon>
-                </v-ons-toolbar-button>
             </div>
             <div class="center">
                 <v-ons-icon icon="fa-cutlery"></v-ons-icon>
                 shocknine
             </div>
             <div class="right">
+                <v-ons-toolbar-button @click="toggleMenu">
+                    <v-ons-icon icon="fa-bars"></v-ons-icon>
+                </v-ons-toolbar-button>
+
             </div>
         </v-ons-toolbar>
 
         <main class="main-container">
             <div class="chat-timeline">
-                <balloon
-                        v-for="chat in chatLogs"
-                        :speaker="chat.speaker"
-                        :name="chat.name"
-                        :message="chat.message">
-                </balloon>
+                <div class="baloon-rapper" @click="toggleDialog(chat)" v-for="chat in chatLogs">
+                    <balloon
+                            :speaker="chat.speaker"
+                            :name="chat.name"
+                            :message="chat.message"
+                            :picture="chat.picture">
+                    </balloon>
+                </div>
             </div>
+
             <chat-form
                     @submit-message="submit"
                     apply-event="submit-message">
             </chat-form>
+
+            <v-ons-dialog cancelable :visible.sync="isDialogVisible">
+                <div class="image-dialog">
+                    <img src="https://xrium.xyz/handa-lunch-debug/pictures/20190208.jpg">
+                </div>
+            </v-ons-dialog>
         </main>
     </v-ons-page>
 </template>
@@ -83,7 +93,14 @@
         <div class="avatar" v-if="speaker === 'other'">
             <img src="images/icon-ios/Icon-60@3x.png">
         </div>
-        <div class="message">{{ message }}</div>
+        <div class="message">
+            <div class="menu-image" v-if="speaker === 'other'">
+                <img src="https://xrium.xyz/handa-lunch-debug/pictures/20190211.jpg"　onError="this.onerror=null;this.src='/images/assets/kyusyoku_haizen.png';">
+            </div>
+            <div>
+                {{ message }}
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -103,7 +120,7 @@
         <v-ons-splitter-side swipeable
                              width="65%"
                              collapse=""
-                             side="left"
+                             side="right"
                              :open.sync="menuIsOpen"
         >
             <v-ons-page>
@@ -184,7 +201,8 @@
                 strict: true,
                 namespaced: true,
                 state: {
-                    isOpen: false
+                    isOpen: false,
+                    isImageDialogVisible: false
                 },
                 mutations: {
                     toggle(state, shouldOpen) {
@@ -192,6 +210,13 @@
                             state.isOpen = shouldOpen
                         } else {
                             state.isOpen = !state.isOpen
+                        }
+                    },
+                    dialogToggle(state, shouldOpen) {
+                        if (typeof shouldOpen === 'boolean') {
+                            state.isImageDialogVisible = shouldOpen
+                        } else {
+                            state.isImageDialogVisible = !state.isImageDialogVisible
                         }
                     }
                 },
@@ -233,6 +258,10 @@
                 }
             },
             message: {
+                type: String,
+                required: true
+            },
+            image: {
                 type: String,
                 required: true
             }
@@ -278,15 +307,25 @@
                 this.submit(firstCommand)
             }, 1000)
         },
+        computed: {
+            isDialogVisible() {
+                return store.state.splitter.isImageDialogVisible
+            }
+        },
         methods: {
-            toggleMenu: function () {
+            toggleMenu() {
                 this.$store.commit('splitter/toggle')
+            },
+            toggleDialog(item) {
+                console.log(item)
+                this.$store.commit('splitter/dialogToggle')
             },
             submit (value) {
                 if(value != ''){
                     this.chatLogs.push({
                         speaker: 'my',
-                        message: value
+                        message: value,
+                        picture: ''
                     });
                     this.scrollDown()
                     this.botSubmit()
@@ -299,7 +338,8 @@
                         if (messages[0] != '') {
                             this.chatLogs.push({
                                 speaker: 'other',
-                                message: messages[0]
+                                message: messages[0],
+                                picture: ''
                             })
                         }
                         this.scrollDown()
@@ -356,8 +396,8 @@
                             this.getLunchDayMenu(date)
                                 .then(menu_str => {
                                     repryText.push('今日の給食ですね．お調べします．')
-                                    if (menu_str != '') {
-                                        repryText.push(menu_str)
+                                    if (menu_str.menu != '') {
+                                        repryText.push(menu_str.menu)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -371,8 +411,8 @@
                             this.getLunchDayMenu(new Date(date.getTime() + 1*24*60*60*1000))
                                 .then(menu_str => {
                                     repryText.push('明日の給食ですね．お調べします．')
-                                    if (menu_str != '') {
-                                        repryText.push(menu_str)
+                                    if (menu_str.menu != '') {
+                                        repryText.push(menu_str.menu)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -386,8 +426,8 @@
                             this.getLunchDayMenu(new Date(date.getTime() + 2*24*60*60*1000))
                                 .then(menu_str => {
                                     repryText.push('明後日の給食ですね．お調べします．')
-                                    if (menu_str != '') {
-                                        repryText.push(menu_str)
+                                    if (menu_str.menu != '') {
+                                        repryText.push(menu_str.menu)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -417,7 +457,10 @@
                                 .then(menu_str_arr => {
                                     repryText.push('今週の給食ですね．お調べします．')
                                     if (menu_str_arr != []) {
-                                        resolve(repryText.concat(menu_str_arr))
+                                        for (let i in menu_str_arr) {
+                                            repryText.push(menu_str_arr[i].menu)
+                                        }
+                                        resolve(repryText)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -431,7 +474,10 @@
                                 .then(menu_str_arr => {
                                     repryText.push('先週の給食ですね．お調べします．')
                                     if (menu_str_arr != []) {
-                                        resolve(repryText.concat(menu_str_arr))
+                                        for (let i in menu_str_arr) {
+                                            repryText.push(menu_str_arr[i].menu)
+                                        }
+                                        resolve(repryText)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -445,7 +491,10 @@
                                 .then(menu_str_arr => {
                                     repryText.push('来週の給食ですね．お調べします．')
                                     if (menu_str_arr != []) {
-                                        resolve(repryText.concat(menu_str_arr))
+                                        for (let i in menu_str_arr) {
+                                            repryText.push(menu_str_arr[i].menu)
+                                        }
+                                        resolve(repryText)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -462,8 +511,8 @@
                             this.getLunchDayMenu(new Date(tmp_y2, tmp_m2-1, tmp_d2))
                                 .then(menu_str => {
                                     repryText.push(tmp_y2 + '年' + tmp_m2 + '月' + tmp_d2 + '日の給食ですね．お調べします.')
-                                    if (menu_str != '') {
-                                        repryText.push(menu_str)
+                                    if (menu_str.menu != '') {
+                                        repryText.push(menu_str.menu)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -480,8 +529,8 @@
                             this.getLunchDayMenu(new Date(date.getFullYear(), tmp_m-1, tmp_d))
                                 .then(menu_str => {
                                     repryText.push(tmp_m + '月' + tmp_d + '日の給食ですね．お調べします.')
-                                    if (menu_str != '') {
-                                        repryText.push(menu_str)
+                                    if (menu_str.menu != '') {
+                                        repryText.push(menu_str.menu)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -496,7 +545,7 @@
                             resolve(repryText)
                             break
                         default:
-                            repryText.push('ちょっとよくわからなかったので，もう一度聞いてみてね．\n聞き方の例\n「今日の給食を教えて」\n「来週の給食を教えて」\n「7月20日の給食を教えて」')
+                            repryText.push('ちょっとよくわからなかったので，もう一度聞いてみてください．\n聞き方の例\n「今日の給食を教えて」\n「来週の給食を教えて」\n「3月21日の給食を教えて」')
                             resolve(repryText)
                     }
                 })
@@ -508,6 +557,7 @@
                     let d = date.getDate()
                     let dd = (date.getDay() === 0) ? '日' : (date.getDay() === 1 ? '月' : (date.getDay() === 2 ? '火' : (date.getDay() === 3 ? '水' : (date.getDay() === 4 ? '木' : (date.getDay() === 5 ? '金' : '土')))))
                     let repText = ''
+                    let imagePath = ''
                     let table = store.state.model.tables.filter( (item, index) => {
                         return (item.year === y && item.month === m) ? true : false
                     })
@@ -515,6 +565,7 @@
 
                     //TODO
                     //本来であればAPIで提供されたデータにアクセスしたい
+                    //画像の場所も個人のストレージなのでもう少しスマートな方法がありそう
                     axios.get(tableUrl)
                         .then(csv => {
                             let splited_csv = csv.data.split('\n')
@@ -526,6 +577,9 @@
                             menu_table.forEach(row => {
                                 if ((Number(row[2]) === y) && (Number(row[3]) === m) && (Number(row[4]) === d)) {
                                     if (row.length != 6) {
+                                        //画像の場所
+                                        imagePath = 'https://xrium.xyz/handa-lunch-debug/pictures/' + y + ('00'+m).slice(-2) + ('00'+d).slice(-2) + '.jpg'
+
                                         //日付情報を追加
                                         repText = (y + '年' + m + '月' + d + '日(' + dd + ')の給食は\n')
                                         //メニュー情報を追加
@@ -540,10 +594,10 @@
                                     }
                                 }
                             })
-                            resolve(repText)
+                            resolve({menu: repText, image: 'imagePath'})
                         })
                         .catch(error => {
-                            reject(error)
+                            resolve(repText)
                         })
                 })
             },
@@ -672,6 +726,10 @@
     }
 
     /*baloon*/
+    .conversation-balloon {
+        margin-top: 10px;
+    }
+
     .conversation-balloon.my {
         text-align: right;
         margin-right: 2px;
@@ -695,6 +753,7 @@
         float: left;
     }
     .conversation-balloon.other > .message {
+        white-space: pre-line;
         margin-left: 10px;
         background-color: #FFFFFF;
         max-width: 70%;
@@ -720,16 +779,15 @@
         margin-bottom: 5px;
     }
     .conversation-balloon > .message {
-        white-space: pre-line;
         display: inline-block;
         max-width: 280px;
         padding: 10px 10px;
-        border-radius: 30px;
+        border-radius: 20px;
         font-size: 1.4rem;
         min-height: 20px;
         word-wrap: break-word;
         position: relative;
-        margin: 5px;
+        margin: 3px;
     }
 
     .conversation-balloon > .message::before {
@@ -738,6 +796,9 @@
         position: absolute;
         top: 5px;
         border: 8px solid transparent;
+    }
+    .image-dialog > img {
+        width: 100%;
     }
 
     /*chat form*/
@@ -763,7 +824,6 @@
         padding: 0px;
         margin: 5px 5px 5px 10px;
         border: 0px;
-        border-radius: 20px;
     }
     .form-container > .submit {
         position: absolute;
@@ -799,12 +859,12 @@
         flex-direction: column;
 
     }
-    .chat-timeline > .conversation-balloon {
-        margin-top: 10px;
-        margin-bottom: 10px;
+    .chat-timeline > .baloon-rapper > .conversation-balloon > .message > .menu-image > img {
+        width: 80px;
+        padding: -10px;
+        margin-bottom: -10px;
+        border-radius: 10px;
     }
-
-
 </style>
 
 </body>
