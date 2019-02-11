@@ -1,4 +1,4 @@
-var CACHE_NAME  = "shocknine-cache-v0-01";
+var CACHE_NAME  = "shocknine-cache-v0-02";
 
 var urlsToCache = [
     "/",
