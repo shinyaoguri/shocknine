@@ -29,8 +29,8 @@
     <link rel="apple-touch-icon" type="image/png" href="images/icon-ios/Icon-60@3x.png">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.6/css/onsenui.css">
-    <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/onsenui@2.10.6/css/onsenui.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css">
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
@@ -181,7 +181,6 @@
     const store = new Vuex.Store({
         modules: {
             navigator: {
-                strict: true,
                 namespaced: true,
                 state: {
                     stack: []
@@ -198,7 +197,6 @@
                 },
             },
             splitter: {
-                strict: true,
                 namespaced: true,
                 state: {
                     isOpen: false,
@@ -222,7 +220,6 @@
                 },
             },
             model: {
-                strict: true,
                 namespaced: true,
                 state: {
                     links: [],
@@ -298,7 +295,7 @@
         data: function () {
             return {
                 chatLogs: [],
-                version: '0.0.2'
+                version: '0.0.3'
             }
         },
         mounted() {
@@ -541,7 +538,7 @@
                                 })
                             break
                         case /version/.test(message):
-                            repryText.push('Ver:0.0.1')
+                            repryText.push('Ver.' + version)
                             resolve(repryText)
                             break
                         default:
