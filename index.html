@@ -162,15 +162,15 @@
     ////////////////
     // Service Worker
     ////////////////
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function(err) {
-                console.log('ServiceWorker registration failed: ', err);
-            });
-        });
-    }
+    // if ('serviceWorker' in navigator) {
+    //     window.addEventListener('load', function() {
+    //         navigator.serviceWorker.register('/sw.js').then(function(registration) {
+    //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    //         }, function(err) {
+    //             console.log('ServiceWorker registration failed: ', err);
+    //         });
+    //     });
+    // }
 
     ////////////////
     // Vuex
@@ -311,8 +311,9 @@
                 this.$store.commit('splitter/toggle')
             },
             toggleDialog(item) {
-                console.log(item)
-                this.$store.commit('splitter/dialogToggle')
+                if (item.speaker === 'other') {
+                    this.$store.commit('splitter/dialogToggle')
+                }
             },
             submit (value) {
                 if(value != ''){
@@ -534,7 +535,7 @@
                                     reject(error)
                                 })
                             break
-                        case /version/.test(message):
+                        case /(version|バージョン)/.test(message):
                             repryText.push('Ver.' + this.version)
                             resolve(repryText)
                             break
