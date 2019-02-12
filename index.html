@@ -676,10 +676,6 @@
             }
         },
         beforeCreate() {
-            if (ons.platform.isIPhoneX()) {
-                document.documentElement.setAttribute('onsflag-iphonex-portrait', '')
-                document.documentElement.setAttribute('onsflag-iphonex-landscape', '')
-            }
             axios.get('data.json')
                 .then( response => {
                     store.commit('model/setLinks', response.data.links)
