@@ -296,7 +296,7 @@
                 this.$store.commit('splitter/toggle')
             },
             toggleDialog(item) {
-                if (item.speaker === 'other') {
+                if ((item.speaker === 'other') && (item.picture != '')) {
                     this.dialogImagePath = item.picture
                     this.$store.commit('splitter/dialogToggle')
                 }
