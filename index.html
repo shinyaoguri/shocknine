@@ -678,7 +678,8 @@
         },
         beforeCreate() {
             if (ons.platform.isIPhoneX()) {
-                document.documentElement.setAttribute('onsflag-iphonex-landscape', '');
+                document.documentElement.setAttribute('onsflag-iphonex-portrait', '')
+                document.documentElement.setAttribute('onsflag-iphonex-landscape', '')
             }
             axios.get('data.json')
                 .then( response => {
