@@ -77,7 +77,7 @@
 
             <v-ons-dialog cancelable :visible.sync="isDialogVisible">
                 <div class="image-dialog">
-                    <img :src=dialogImagePath>
+                    <img :src=dialogImagePath onError="this.onerror=null;this.src='/images/assets/kyusyoku_haizen.png';">
                 </div>
             </v-ons-dialog>
         </main>
@@ -276,7 +276,7 @@
         data: function () {
             return {
                 chatLogs: [],
-                version: '0.0.4',
+                version: '0.0.5',
                 dialogImagePath: ''
             }
         },
@@ -380,7 +380,7 @@
                                     if (menu_str.messageText != '') {
                                         repryText.push(menu_str)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                     resolve(repryText)
                                 })
@@ -395,7 +395,7 @@
                                     if (menu_str.messageText != '') {
                                         repryText.push(menu_str)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                     resolve(repryText)
                                 })
@@ -410,7 +410,7 @@
                                     if (menu_str.messageText != '') {
                                         repryText.push(menu_str)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                     resolve(repryText)
                                 })
@@ -425,7 +425,7 @@
                                     if (menu_str.messageText != '') {
                                         repryText.push(menu_str)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                     resolve(repryText)
                                 })
@@ -445,7 +445,7 @@
                                         }
                                         resolve(repryText)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                 })
                                 .catch(error => {
@@ -464,7 +464,7 @@
                                         }
                                         resolve(repryText)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                 })
                                 .catch(error => {
@@ -483,7 +483,7 @@
                                         }
                                         resolve(repryText)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                 })
                                 .catch(error => {
@@ -501,7 +501,7 @@
                                     if (menu_str.messageText != '') {
                                         repryText.push(menu_str)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                     resolve(repryText)
                                 })
@@ -519,7 +519,7 @@
                                     if (menu_str.messageText != '') {
                                         repryText.push(menu_str)
                                     } else {
-                                        repryText.push('献立が見つかりません')
+                                        repryText.push({messageText: '献立が見つかりません', image: ''})
                                     }
                                     resolve(repryText)
                                 })
@@ -532,7 +532,7 @@
                             resolve(repryText)
                             break
                         default:
-                            repryText.push('ちょっとよくわからなかったので，もう一度聞いてみてください．\n聞き方の例\n「今日の給食を教えて」\n「来週の給食を教えて」\n「3月21日の給食を教えて」')
+                            repryText.push({messageText: 'ちょっとよくわからなかったので，もう一度聞いてみてください．\n聞き方の例\n「今日の給食を教えて」\n「来週の給食を教えて」\n「3月21日の給食を教えて」', image: ''})
                             resolve(repryText)
                     }
                 })
