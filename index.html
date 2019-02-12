@@ -64,7 +64,6 @@
                 <div class="baloon-rapper" @click="toggleDialog(chat)" v-for="chat in chatLogs">
                     <balloon
                             :speaker="chat.speaker"
-                            :name="chat.name"
                             :message="chat.message"
                             :picture="chat.picture">
                     </balloon>
@@ -78,7 +77,7 @@
 
             <v-ons-dialog cancelable :visible.sync="isDialogVisible">
                 <div class="image-dialog">
-                    <img src="https://xrium.xyz/handa-lunch-debug/pictures/20190208.jpg">
+                    <img :src=dialogImagePath>
                 </div>
             </v-ons-dialog>
         </main>
@@ -91,8 +90,8 @@
             <img src="images/icon-ios/Icon-60@3x.png">
         </div>
         <div class="message">
-            <div class="menu-image" v-if="speaker === 'other'">
-                <img src="https://xrium.xyz/handa-lunch-debug/pictures/20190211.jpg"　onError="this.onerror=null;this.src='/images/assets/kyusyoku_haizen.png';">
+            <div class="menu-image" v-if="(speaker === 'other') && (picture != '')">
+                <img :src=picture onError="this.onerror=null;this.src='/images/assets/kyusyoku_haizen.png';">
             </div>
             <div>
                 {{ message }}
@@ -157,19 +156,6 @@
 <div id="app"></div>
 
 <script>
-    ////////////////
-    // Service Worker
-    ////////////////
-    // if ('serviceWorker' in navigator) {
-    //     window.addEventListener('load', function() {
-    //         navigator.serviceWorker.register('/sw.js').then(function(registration) {
-    //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    //         }, function(err) {
-    //             console.log('ServiceWorker registration failed: ', err);
-    //         });
-    //     });
-    // }
-
     ////////////////
     // Vuex
     ////////////////
@@ -253,7 +239,7 @@
                 type: String,
                 required: true
             },
-            image: {
+            picture: {
                 type: String,
                 required: true
             }
@@ -290,7 +276,8 @@
         data: function () {
             return {
                 chatLogs: [],
-                version: '0.0.4'
+                version: '0.0.4',
+                dialogImagePath: ''
             }
         },
         mounted() {
@@ -310,6 +297,7 @@
             },
             toggleDialog(item) {
                 if (item.speaker === 'other') {
+                    this.dialogImagePath = item.picture
                     this.$store.commit('splitter/dialogToggle')
                 }
             },
@@ -328,11 +316,11 @@
             deleyUpdate (messages) {
                 if (messages.length != 0) {
                     setTimeout( () => {
-                        if (messages[0] != '') {
+                        if (messages[0].messageText != '') {
                             this.chatLogs.push({
                                 speaker: 'other',
-                                message: messages[0],
-                                picture: ''
+                                message: messages[0].messageText,
+                                picture: messages[0].image
                             })
                         }
                         this.scrollDown()
@@ -388,9 +376,9 @@
                         case /(今日|きょう|today)/.test(message):
                             this.getLunchDayMenu(date)
                                 .then(menu_str => {
-                                    repryText.push('今日の給食ですね．お調べします．')
-                                    if (menu_str.menu != '') {
-                                        repryText.push(menu_str.menu)
+                                    repryText.push({messageText: '今日の給食ですね．お調べします．', image: ''})
+                                    if (menu_str.messageText != '') {
+                                        repryText.push(menu_str)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -403,9 +391,9 @@
                         case /(明日|あした|tomorrow)/.test(message):
                             this.getLunchDayMenu(new Date(date.getTime() + 1*24*60*60*1000))
                                 .then(menu_str => {
-                                    repryText.push('明日の給食ですね．お調べします．')
-                                    if (menu_str.menu != '') {
-                                        repryText.push(menu_str.menu)
+                                    repryText.push({messageText: '明日の給食ですね．お調べします．', image: ''})
+                                    if (menu_str.messageText != '') {
+                                        repryText.push(menu_str)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -418,9 +406,9 @@
                         case /(明後日|あさって|dayaftertomorrow)/.test(message):
                             this.getLunchDayMenu(new Date(date.getTime() + 2*24*60*60*1000))
                                 .then(menu_str => {
-                                    repryText.push('明後日の給食ですね．お調べします．')
-                                    if (menu_str.menu != '') {
-                                        repryText.push(menu_str.menu)
+                                    repryText.push({messageText: '明後日の給食ですね．お調べします．', image: ''})
+                                    if (menu_str.messageText != '') {
+                                        repryText.push(menu_str)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -433,8 +421,8 @@
                         case /(昨日|きのう|tomorrow)/.test(message):
                             this.getLunchDayMenu(new Date(date.getTime() - 1*24*60*60*1000))
                                 .then(menu_str => {
-                                    repryText.push('昨日の給食ですね．お調べします．')
-                                    if (menu_str != '') {
+                                    repryText.push({messageText: '昨日の給食ですね．お調べします．', image: ''})
+                                    if (menu_str.messageText != '') {
                                         repryText.push(menu_str)
                                     } else {
                                         repryText.push('献立が見つかりません')
@@ -448,10 +436,12 @@
                         case /(今週|こんしゅう|thisweek)/.test(message):
                             this.getLunchWeekMenu(date)
                                 .then(menu_str_arr => {
-                                    repryText.push('今週の給食ですね．お調べします．')
+                                    repryText.push({messageText: '今週の給食ですね．お調べします．', image: ''})
                                     if (menu_str_arr != []) {
                                         for (let i in menu_str_arr) {
-                                            repryText.push(menu_str_arr[i].menu)
+                                            if (menu_str_arr[i].messageText != '') {
+                                                repryText.push(menu_str_arr[i])
+                                            }
                                         }
                                         resolve(repryText)
                                     } else {
@@ -465,10 +455,12 @@
                         case /(先週|せんしゅう|lastweek)/.test(message):
                             this.getLunchWeekMenu(new Date(date.getTime() - 7*24*60*60*1000))
                                 .then(menu_str_arr => {
-                                    repryText.push('先週の給食ですね．お調べします．')
+                                    repryText.push({messageText: '先週の給食ですね．お調べします．', image: ''})
                                     if (menu_str_arr != []) {
                                         for (let i in menu_str_arr) {
-                                            repryText.push(menu_str_arr[i].menu)
+                                            if (menu_str_arr[i].messageText != '') {
+                                                repryText.push(menu_str_arr[i])
+                                            }
                                         }
                                         resolve(repryText)
                                     } else {
@@ -482,10 +474,12 @@
                         case /(来週|らいしゅう|nextweek)/.test(message):
                             this.getLunchWeekMenu(new Date(date.getTime() + 7*24*60*60*1000))
                                 .then(menu_str_arr => {
-                                    repryText.push('来週の給食ですね．お調べします．')
+                                    repryText.push({messageText: '来週の給食ですね．お調べします．', image: ''})
                                     if (menu_str_arr != []) {
                                         for (let i in menu_str_arr) {
-                                            repryText.push(menu_str_arr[i].menu)
+                                            if (menu_str_arr[i].messageText != '') {
+                                                repryText.push(menu_str_arr[i])
+                                            }
                                         }
                                         resolve(repryText)
                                     } else {
@@ -503,9 +497,9 @@
                             let tmp_d2 = tmp_match2[3]
                             this.getLunchDayMenu(new Date(tmp_y2, tmp_m2-1, tmp_d2))
                                 .then(menu_str => {
-                                    repryText.push(tmp_y2 + '年' + tmp_m2 + '月' + tmp_d2 + '日の給食ですね．お調べします.')
-                                    if (menu_str.menu != '') {
-                                        repryText.push(menu_str.menu)
+                                    repryText.push({messageText: (tmp_y2 + '年' + tmp_m2 + '月' + tmp_d2 + '日の給食ですね．お調べします.'), image: ''})
+                                    if (menu_str.messageText != '') {
+                                        repryText.push(menu_str)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -521,9 +515,9 @@
                             let tmp_d = tmp_match[2]
                             this.getLunchDayMenu(new Date(date.getFullYear(), tmp_m-1, tmp_d))
                                 .then(menu_str => {
-                                    repryText.push(tmp_m + '月' + tmp_d + '日の給食ですね．お調べします.')
-                                    if (menu_str.menu != '') {
-                                        repryText.push(menu_str.menu)
+                                    repryText.push({messageText: (tmp_m + '月' + tmp_d + '日の給食ですね．お調べします.'), image: ''})
+                                    if (menu_str.messageText != '') {
+                                        repryText.push(menu_str)
                                     } else {
                                         repryText.push('献立が見つかりません')
                                     }
@@ -557,8 +551,7 @@
                     let tableUrl = table[0].url
 
                     //TODO
-                    //本来であればAPIで提供されたデータにアクセスしたい
-                    //画像の場所も個人のストレージなのでもう少しスマートな方法がありそう
+                    // 献立データと画像のホスティングをどうするか
                     axios.get(tableUrl)
                         .then(csv => {
                             let splited_csv = csv.data.split('\n')
@@ -587,10 +580,10 @@
                                     }
                                 }
                             })
-                            resolve({menu: repText, image: 'imagePath'})
+                            resolve({messageText: repText, image: imagePath})
                         })
                         .catch(error => {
-                            resolve(repText)
+                            resolve({messageText: repText, image: imagePath})
                         })
                 })
             },
