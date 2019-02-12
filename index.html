@@ -31,7 +31,8 @@
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/onsenui@2.10.6/css/onsen-css-components.min.css">
 
     <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
     <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.min.js"></script>
     <script src="https://unpkg.com/onsenui@2.10.6/js/onsenui.min.js"></script>
     <script src="https://unpkg.com/vue-onsenui@2.6.1/dist/vue-onsenui.min.js"></script>
@@ -61,7 +62,7 @@
 
         <main class="main-container">
             <div class="chat-timeline">
-                <div class="baloon-rapper" @click="toggleDialog(chat)" v-for="chat in chatLogs">
+                <div class="baloon-rapper" @click="toggleOnDialog(chat)" @posthide="toggleOffDialog()" v-for="chat in chatLogs">
                     <balloon
                             :speaker="chat.speaker"
                             :message="chat.message"
@@ -295,11 +296,14 @@
             toggleMenu() {
                 this.$store.commit('splitter/toggle')
             },
-            toggleDialog(item) {
+            toggleOnDialog(item) {
                 if ((item.speaker === 'other') && (item.picture != '')) {
                     this.dialogImagePath = item.picture
                     this.$store.commit('splitter/dialogToggle')
                 }
+            },
+            toggleOffDialog() {
+                this.$store.commit('splitter/dialogToggle', false)
             },
             submit (value) {
                 if(value != ''){
