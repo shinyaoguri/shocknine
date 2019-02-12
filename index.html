@@ -62,7 +62,7 @@
 
         <main class="main-container">
             <div class="chat-timeline">
-                <div class="baloon-rapper" @click="toggleOnDialog(chat)" @posthide="toggleOffDialog()" v-for="chat in chatLogs">
+                <div class="baloon-rapper" @click="toggleOnDialog(chat)" v-for="chat in chatLogs">
                     <balloon
                             :speaker="chat.speaker"
                             :message="chat.message"
@@ -76,7 +76,7 @@
                     apply-event="submit-message">
             </chat-form>
 
-            <v-ons-dialog cancelable :visible.sync="isDialogVisible">
+            <v-ons-dialog cancelable :visible.sync="isDialogVisible" @prehide="toggleOffDialog()">
                 <div class="image-dialog">
                     <img :src=dialogImagePath onError="this.onerror=null;this.src='/images/assets/kyusyoku_haizen.png';">
                 </div>
@@ -288,8 +288,13 @@
             }, 1000)
         },
         computed: {
-            isDialogVisible() {
-                return store.state.splitter.isImageDialogVisible
+            isDialogVisible: {
+                get() {
+                    return store.state.splitter.isImageDialogVisible
+                },
+                set(newValue) {
+                    store.commit('splitter/toggleDialog', newValue)
+                }
             }
         },
         methods: {
