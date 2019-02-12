@@ -78,7 +78,7 @@
 
             <v-ons-dialog cancelable :visible.sync="isDialogVisible" @prehide="toggleOffDialog()">
                 <div class="image-dialog">
-                    <img :src=dialogImagePath onError="this.onerror=null;this.src='/images/assets/kyusyoku_haizen.png';">
+                    <img :src=dialogImagePath onerror="this.src='/images/assets/kyusyoku_haizen.png';">
                 </div>
             </v-ons-dialog>
         </main>
@@ -92,7 +92,7 @@
         </div>
         <div class="message">
             <div class="menu-image" v-if="(speaker === 'other') && (picture != '')">
-                <img :src=picture onError="this.onerror=null;this.src='/images/assets/kyusyoku_haizen.png';">
+                <img :src=picture onerror="this.src='/images/assets/kyusyoku_haizen.png';">
             </div>
             <div>
                 {{ message }}
