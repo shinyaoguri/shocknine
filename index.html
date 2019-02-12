@@ -116,6 +116,7 @@
 <template id="splitter">
     <v-ons-splitter>
         <v-ons-splitter-side swipeable
+                             open-threshold="0.4"
                              width="65%"
                              collapse=""
                              side="right"
@@ -364,6 +365,12 @@
                 switch (pathParam) {
                     case 'today':
                         return '今日の給食を教えて'
+                        break
+                    case 'tomorrow':
+                        return '明日の給食を教えて'
+                        break
+                    case 'yesterday':
+                        return '昨日の給食を教えて'
                         break
                     case 'thisweek':
                         return '今週の給食を教えて'
