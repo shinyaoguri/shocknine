@@ -581,7 +581,8 @@
                                 if ((Number(row[2]) === y) && (Number(row[3]) === m) && (Number(row[4]) === d)) {
                                     if (row.length != 6) {
                                         //画像の場所
-                                        imagePath = 'https://xrium.xyz/handa-lunch-debug/pictures/' + y + ('00'+m).slice(-2) + ('00'+d).slice(-2) + '.jpg'
+                                        let tmp_now = new Date()
+                                        imagePath = 'https://xrium.xyz/handa-lunch-debug/pictures/' + y + ('00'+m).slice(-2) + ('00'+d).slice(-2) + '.jpg?' + date.getTime()
 
                                         //日付情報を追加
                                         repText = (y + '年' + m + '月' + d + '日(' + dd + ')の給食は\n')
@@ -695,7 +696,7 @@
                     let latestDate = new Date(date.getTime() + 20*24*60*60*1000)
                     let startDate = new Date('2017-02')
                     for (let ym=startDate; ym<latestDate; ym.setMonth(ym.getMonth()+1)) {
-                        url = 'data/handa_kyushoku_menu_' + ym.getFullYear()  + ('0'+(ym.getMonth()+1)).slice(-2) + '.csv'
+                        url = 'data/handa_kyushoku_menu_' + ym.getFullYear()  + ('0'+(ym.getMonth()+1)).slice(-2) + '.csv?' + date.getTime()
                         store.commit('model/pushTableUrl', {
                             year: ym.getFullYear(),
                             month: (ym.getMonth()+1),
