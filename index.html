@@ -16,13 +16,15 @@
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-android/icon-192x192.png">
 
     <!-- android -->
-    <!--<link rel="manifest" href="manifest.json">-->
+    <link rel="manifest" href="manifest.json">
 
     <!-- mobile  -->
     <meta name="viewport"
-          content="width=device-width,initial-scale=1.0">
+          content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 
     <!-- mobile Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-title" content="shocknine">
     <link rel="apple-touch-icon" type="image/png" href="images/icon-ios/Icon-60@3x.png">
@@ -159,6 +161,16 @@
 <div id="app"></div>
 
 <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+
     ////////////////
     // Vuex
     ////////////////
@@ -677,13 +689,48 @@
         },
         methods: {
             loadLink(url) {
-                window.open(url, '_blank')
+                const newWindow = window.open(url, '_blank')
+                newWindow.opener = null
+                newWindow.location = url
             },
             goBack() {
                 this.$router.push({name: this.$route.matched[this.$route.matched.length - 2].name})
             }
         },
         beforeCreate() {
+            if (ons.platform.isIPhoneX()) {
+                if (window.navigator.standalone && ('standalone' in window.navigator)) {
+                    // iPhoneXX向けのCSSを適用させる
+                    document.documentElement.setAttribute('onsflag-iphonex-portrait', '')
+                    document.documentElement.setAttribute('onsflag-iphonex-landscape', '')
+                    // TODO
+                    // OnsenUIのバグっぽいがiPhoneXX向けに全画面表示した時がともかくおかしいので自前で解決させる
+                    let metas = document.head.children
+                    let iosStatusBarStyle = ''
+                    Object.keys(metas).forEach(key => {
+                        if (metas[key].getAttribute('name') === 'apple-mobile-web-app-status-bar-style') {
+                            iosStatusBarStyle = metas[key].getAttribute('content')
+                        }
+                    })
+                    switch (iosStatusBarStyle) {
+                        case 'default':
+                        case 'black':
+                            let headTag = document.getElementsByTagName('head')[0]
+                            let patchLink = document.createElement('link')
+                            patchLink.rel = 'stylesheet'
+                            patchLink.type = 'text/css'
+                            patchLink.href = 'assets/iphonex-layout-patch.css'
+                            headTag.appendChild(patchLink)
+                            break
+                        case 'black-translucent':
+                            let h = window.screen.height
+                            console.log(h)
+                            document.documentElement.style.cssText = 'height: ' + h + 'px !important'
+                            break
+                        default:
+                    }
+                }
+            }
             axios.get('data.json')
                 .then( response => {
                     store.commit('model/setLinks', response.data.links)
